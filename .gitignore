@@ -1,0 +1,5 @@
+*.pyc
+Inv
+db.sqlite3
+inventory/media
+manager/migrations

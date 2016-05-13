@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post" action="{% url 'login' %}">
+	{% csrf_token %}
+	{{ formset }}
+	<input type="hidden" name="next" value="{{ Next }}" />
+	<input type="submit" value="Login"/>
+	<h3>{{ login_error }}</h3>
+</form>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if success %}
+	<h2>Registriation successful</h2>
+	<p>Registriation has been completed successfully. The new user must be activated by an administrator.</p>
+{% else %}
+	<h2>Registriation</h2>
+	<form method="post" action="{% url 'register' %}">
+		{% csrf_token %}
+		{{ formset }}
+		<input type="submit" value="Register"/>
+	</form>
+{% endif %}
+{% endblock %}

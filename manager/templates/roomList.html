@@ -1,0 +1,14 @@
+<table class="table table-bordered table-condensed">
+	<tr>
+		<th>Room Name</th>
+		<th>Address</th>
+		<th>Edit</th>
+	</tr>
+	{% for room in rooms %}
+		<tr>
+			<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=room.id %}">{{ room.room_id }}</a></td>
+			<td><a class="btn btn-primary btn-block" href="{% url 'addressDetails' pk=room.address.id %}">{{ room.address }}</a></td>
+			<td><a class="btn btn-default btn-block" href="{% url 'editRoom' pk=room.id %}">Edit</a></td>
+		</tr>
+	{% endfor %}
+</table>

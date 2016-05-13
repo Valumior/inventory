@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Add/Edit Room</h2>
+	<form enctype="multipart/form-data" method="post" url="{% url 'addRoom' %}">
+		{% csrf_token %}
+		{{ formset }}
+		<button type="submit">Save room</button>
+	</form>
+{% endblock %}

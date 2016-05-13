@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<a class="btn btn-default" href="{% url 'addAddress' %}">Add address</a>
+	<table class="table table-bordered table-condensed">
+		<tr>
+			<th>Address</th>
+			<th>Edit</th>
+		</tr>
+		{% for address in addressess %}
+			<tr>
+				<td><a class="btn btn-primary btn-block" href="{% url 'addressDetails' pk=address.id %}">{{ address }}</a></td>
+				<td><a class="btn btn-default btn-block" href="{% url 'editAddress' pk=address.id %}">Edit</a></td>
+			</tr> 
+		{% endfor %}
+	</table>
+{% endblock %}

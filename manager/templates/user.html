@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if inactiveUsers %}
+	<h2>Inactive users</h2>
+	<div class="list-group">
+	{% for selectedUser in inactiveUsers %}
+		<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ selectedUser.username }}</a>
+	{% endfor %}
+	</div>
+{% endif %}
+<h2>Users</h2>
+<div class="list-group">
+{% for selectedUser in activeUsers %}
+	<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ selectedUser.username }}</a>
+{% endfor %}
+</div>
+{% endblock %}

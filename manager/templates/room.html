@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Rooms</h1>
+	<a class="btn btn-default btn" href="{% url 'addRoom' %}">Add room</a>
+	
+	{% include "roomList.html" %}
+	
+{% endblock %}

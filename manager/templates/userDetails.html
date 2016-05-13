@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3> Username: {{ selectedUser.username }}</h3>
+<h4>Full name: {{ selectedUser.first_name }} {{ selectedUser.last_name }}</h4>
+<h4>Mail: {{ selectedUser.email }}</h4>
+<h4>Last login: {{ selectedUser.last_login }}</h4>
+{% if selectedUser.is_superuser %}
+	<h4>Status: Superuser</h4>
+{% else %}
+	{% if selectedUser.is_active %}
+		{% if selectedUser.is_staff %}
+			<h4>Status: Staff</h4>
+			{% if user.is_superuser %}
+			<h4><a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Demote user</a></h4>
+			{% endif %}
+		{% else %}
+			<h4>Status: Active</h4>
+			{% if user.is_superuser %}
+			<h4><a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Promote to staff</a></h4>
+			{% endif %}
+			<h4><a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Deactivate user</a></h4>
+		{% endif %}
+	{% else %}
+		<h4>Status: Inactive</h4>
+		<h4><a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Activate user</a></h4>
+		<h4><a class="btn btn-default" href="{% url 'userRemove' pk=selectedUser.id %}">Remove user</a></h4>
+	{% endif %}
+{% endif %}
+{% endblock %}

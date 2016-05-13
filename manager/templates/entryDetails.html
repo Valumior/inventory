@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>{{ entry.id_number }}</h1>
+	<h2>{{ entry.name }}</h2>
+	<h4>Date added - {{ entry.date_added }}</h4>
+	<h4>Last modified - {{ entry.last_modified }}</h4>
+	<h3>Description:</h3>
+	<p>{{ entry.description }}</p>
+	<a class="btn btn-default" href="{% url 'editEntry' pk=entry.id_number %}">Edit</a>
+	<h3>QR code:</h3>
+	{% if not entry.qr %}
+		<a class="btn btn-default" href="{% url 'generateQr' pk=entry.id_number %}?next={{ request.path }}">Generate qr code</a>
+	{% else %}
+		<img src="{{ MEDIA_ROOT }}/{{ entry.qr.qr_image.url }}"/>
+	{% endif %}
+	<h2>History</h2>
+	<table class="table table-bordered table-condensed">
+		<tr>
+			<th>Date</th>
+			<th>Old Location</th>
+			<th>New Location</th>
+			<th>User</th>
+		</tr>
+		{% for log in logs %}
+			<tr>
+				<td>{{ log.log_date }}</td>
+				<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=log.old_location.id %}">{{ log.old_location }}</a></td>
+				<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=log.new_location.id %}">{{ log.new_location }}</a></td>
+				<td>{{ log.user.username }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
