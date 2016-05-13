@@ -1,0 +1,12 @@
+colorama==0.3.7
+Django==1.9.4
+django-sslify==0.2.7
+djangorestframework==3.3.2
+enum34==1.1.5
+idna==2.1
+ipaddress==1.0.16
+Pillow==3.2.0
+pyasn1==0.1.9
+pycparser==2.14
+qrcode==5.2.2
+six==1.10.0
