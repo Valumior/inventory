@@ -73,14 +73,17 @@ def registrationView(request):
 			formset = UserForm()
 	return render(request, 'register.html', { 'formset' : formset.as_p(), 'success' : success })
 
+@login_required(login_url='login')
 def mainView(request):
 	entries = Entry.objects.all()
 	return render(request, 'main.html', { 'entries' : entries })
 
+@login_required(login_url='login')
 def roomView(request):
 	rooms = Room.objects.all()
 	return render(request, 'room.html', { 'rooms' : rooms })
 	
+@login_required(login_url='login')
 def roomDetailsView(request, pk=None):
 	if pk:
 		room = get_object_or_404(Room, id=pk)
@@ -88,10 +91,12 @@ def roomDetailsView(request, pk=None):
 		return render(request, 'roomDetails.html', { 'room' : room , 'entries' : entries })
 	return HttpResponseRedirect(reverse('room'))
 	
+@login_required(login_url='login')
 def addressView(request):
 	addressess = Address.objects.all()
 	return render(request, 'address.html', { 'addressess' : addressess })
 	
+@login_required(login_url='login')
 def addressDetailView(request, pk=None):
 	if pk:
 		address = get_object_or_404(Address, id=pk)
@@ -100,6 +105,7 @@ def addressDetailView(request, pk=None):
 		return render(request, 'addressDetails.html', { 'address' : address , 'rooms' : rooms , 'entries' : entries })
 	return HttpResponseRedirect(reverse('address'))
 	
+@login_required(login_url='login')
 def addAddressView(request, pk=None):
 	if pk:
 		address = get_object_or_404(Address, pk=pk)
@@ -116,6 +122,7 @@ def addAddressView(request, pk=None):
 	
 	return render(request, 'addAddress.html', { 'formset' : formset.as_p() })
 
+@login_required(login_url='login')
 def addRoomView(request, pk=None):
 	if pk:
 		room = get_object_or_404(Room, pk=pk)
@@ -156,6 +163,7 @@ def addEntryView(request, pk=None):
 	
 	return render(request, 'addEntry.html', { 'formset' : formset.as_p() })
 
+@login_required(login_url='login')
 def generateQrImage(request, pk=None):
 	if pk:
 		entry = None
@@ -182,6 +190,7 @@ def generateQrImage(request, pk=None):
 		entry.save()
 	return HttpResponseRedirect(request.GET['next'])
 
+@login_required(login_url='login')
 def entryDetailsView(request, pk=None):
 	if pk:
 		entry = get_object_or_404(Entry, id_number=pk)
@@ -189,6 +198,7 @@ def entryDetailsView(request, pk=None):
 		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs})
 	return HttpResponseRedirect(reverse('main'))
 
+@login_required(login_url='login')
 def userView(request):
 	if not request.user.is_staff:
 		raise PermissionDenied
@@ -196,6 +206,7 @@ def userView(request):
 	active = User.objects.filter(is_active=True)
 	return render(request, 'user.html', { 'inactiveUsers' : inactive, 'activeUsers' : active })
 	
+@login_required(login_url='login')
 def userDetailsView(request, pk=None):
 	if not request.user.is_staff:
 		raise PermissionDenied
@@ -204,6 +215,7 @@ def userDetailsView(request, pk=None):
 	user = get_object_or_404(User, id=pk)
 	return render(request, 'userDetails.html', { 'selectedUser' : user })
 
+@login_required(login_url='login')
 def changeUserActiveStatus(request, pk=None):
 	if not request.user.is_staff:
 		raise PermissionDenied
@@ -221,6 +233,7 @@ def changeUserActiveStatus(request, pk=None):
 			#TODO send email?	
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 	
+@login_required(login_url='login')
 def removeUser(request, pk=None):
 	if not request.user.is_staff:
 		raise PermissionDenied
@@ -232,6 +245,7 @@ def removeUser(request, pk=None):
 			user.delete()
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 
+@login_required(login_url='login')
 def changeUserRank(request, pk=None):
 	if not request.user.is_superuser:
 		raise PermissionDenied
