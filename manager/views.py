@@ -309,7 +309,7 @@ def apiRoom(request, pk=None):
 	room = get_object_or_404(Room, id=pk)
 	
 	if request.method == 'GET':
-		serializer - RoomSerializer(room, many=False)
+		serializer = RoomSerializer(room, many=False)
 		return JSONResponse(serializer.data)
 	else:
 		raise Http404
