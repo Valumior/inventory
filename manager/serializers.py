@@ -18,3 +18,8 @@ class EntrySerializer(serializers.ModelSerializer):
 		model = Entry
 		fields = ('id_number', 'name', 'description', 'room')
 		depth = 2
+		
+class EntrySerializerShallow(serializers.ModelSerializer):
+	class Meta:
+		model = Entry
+		fields = ('id_number', 'name', 'description', 'room')
