@@ -17,3 +17,4 @@ class EntrySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Entry
 		fields = ('id_number', 'name', 'description', 'room')
+		depth = 2
