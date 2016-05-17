@@ -178,24 +178,29 @@ def generateQrImage(request, pk=None):
 		qr.make(fit=True)
 		
 		img = qr.make_image()
-		temp = StringIO.StringIO()
-		img.save(temp, format='PNG')
-		filename = id_number + '.png'
-		img_file = InMemoryUploadedFile(temp, None, filename, 'image/png', temp.len, None)
+		response = HttpResponse(mimetype='image/png')
+		return response
 		
-		qr_image = QrImage()
-		qr_image.qr_image.save(filename, img_file)
-		qr_image.save()
-		entry.qr = qr_image
-		entry.save()
-	return HttpResponseRedirect(request.GET['next'])
+		#temp = StringIO.StringIO()
+		#img.save(temp, format='PNG')
+		#filename = id_number + '.png'
+		#img_file = InMemoryUploadedFile(temp, None, filename, 'image/png', temp.len, None)
+		
+		#qr_image = QrImage()
+		#qr_image.qr_image.save(filename, img_file)
+		#qr_image.save()
+		#entry.qr = qr_image
+		#entry.save()
+		#return HttpResponseRedirect(request.GET['next'])
+	else:
+		return Http404
 
 @login_required(login_url='login')
 def entryDetailsView(request, pk=None):
 	if pk:
 		entry = get_object_or_404(Entry, id_number=pk)
 		logs = LogEntry.objects.filter(entry=entry)
-		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs})
+		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk })})
 	return HttpResponseRedirect(reverse('main'))
 
 @login_required(login_url='login')

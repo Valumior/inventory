@@ -12,7 +12,7 @@
 	{% if not entry.qr %}
 		<a class="btn btn-default" href="{% url 'generateQr' pk=entry.id_number %}?next={{ request.path }}">Generate qr code</a>
 	{% else %}
-		<img src="{{ MEDIA_ROOT }}/{{ entry.qr.qr_image.url }}"/>
+		<img src="{{ image }}"/>
 	{% endif %}
 	<h2>History</h2>
 	<table class="table table-bordered table-condensed">
