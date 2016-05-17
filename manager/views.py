@@ -107,6 +107,8 @@ def addressDetailView(request, pk=None):
 	
 @login_required(login_url='login')
 def addAddressView(request, pk=None):
+	if not request.user.is_staff:
+		raise PermissionDenied
 	if pk:
 		address = get_object_or_404(Address, pk=pk)
 	else:
@@ -124,6 +126,8 @@ def addAddressView(request, pk=None):
 
 @login_required(login_url='login')
 def addRoomView(request, pk=None):
+	if not request.user.is_staff:
+		raise PermissionDenied
 	if pk:
 		room = get_object_or_404(Room, pk=pk)
 	else:
@@ -149,7 +153,12 @@ def addEntryView(request, pk=None):
 		entry = Entry()
 		editing = False
 	
-	formset = EntryForm(request.POST or None, instance=entry)
+	if request.user.is_staff:
+		formset = EntryForm(request.POST or None, instance=entry)
+	elif editing:
+		formset = EntryFormSimple(request.POST or None, instance=entry)
+	else:
+		raise PermissionDenied
 	
 	if request.method == 'POST':
 		if formset.is_valid():

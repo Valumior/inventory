@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<a class="btn btn-default" href="{% url 'addEntry' %}">Add entry</a>
+	{% if user.is_staff %}
+		<a class="btn btn-default" href="{% url 'addEntry' %}">Add entry</a>
+	{% endif %}
 	
 	{% include "entryList.html" %}
 

@@ -18,6 +18,11 @@ class EntryForm(ModelForm):
 	class Meta:
 		model = Entry
 		fields = ('name', 'description', 'room')
+		
+class EntryFormSimple(ModelForm):
+	class Meta:
+		model = Entry
+		fields = ('room',)
 
 class UserForm(ModelForm):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())

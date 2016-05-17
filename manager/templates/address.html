@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<a class="btn btn-default" href="{% url 'addAddress' %}">Add address</a>
+	{% if user.is_staff %}
+		<a class="btn btn-default" href="{% url 'addAddress' %}">Add address</a>
+	{% endif %}
 	<table class="table table-bordered table-condensed">
 		<tr>
 			<th>Address</th>
