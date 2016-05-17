@@ -294,7 +294,7 @@ def apiEntry(request, pk=None):
 	elif request.method == 'PUT':
 		old_room = entry.room
 		data = JSONParser().parse(request)
-		serializer = EntrySerializerShallow(entry, data=data)
+		serializer = EntrySerializerShallow(entry, data=data, partial=True)
 		if serializer.is_valid():
 			entry = serializer.save()
 			if old_room.id != entry.room.id:
