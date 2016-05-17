@@ -5,7 +5,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404, HttpResponse
-from django.utils.httpwrappers import HttpResponse as HttpResponseWrapper
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
@@ -179,7 +178,7 @@ def generateQrImage(request, pk=None):
 		qr.make(fit=True)
 		
 		img = qr.make_image()
-		response = HttpResponseWrapper(mimetype='image/png')
+		response = HttpResponse(content_type='image/png')
 		img.save(response, 'PNG')
 		return response
 		
