@@ -6,7 +6,6 @@
 		<th>Last modified</th>
 		<th>Description</th>
 		<th>Room</th>
-		<th>QR</th>
 		<th>Edit</th>
 	</tr>
 	{% for entry in entries %}
@@ -17,13 +16,6 @@
 			<td>{{ entry.last_modified|date:"d-m-Y H:i" }}</td>
 			<td>{{ entry.description}}</td>
 			<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=entry.room.id %}">{{ entry.room }}</a></td>
-			<td>
-				{% if not entry.qr %}
-				<a class="btn btn-default btn-block" href="{% url 'generateQr' pk=entry.id_number %}?next={{ request.path }}">Generate</a>
-				{% else %}
-				Present
-				{% endif %}
-			</td>
 			<td><a class="btn btn-default btn-block" href="{% url 'editEntry' pk=entry.id_number %}">Edit</a></td>
 		</tr>
 	{% endfor %}

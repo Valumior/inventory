@@ -5,5 +5,4 @@ from manager.models import *
 
 admin.site.register(Address)
 admin.site.register(Room)
-admin.site.register(QrImage)
 admin.site.register(Entry)

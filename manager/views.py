@@ -179,20 +179,9 @@ def generateQrImage(request, pk=None):
 		
 		img = qr.make_image()
 		response = HttpResponse(content_type='image/png')
+		response['Content-Disposition'] = 'attachment; filename=%s' % (entry.id_number + '.png')
 		img.save(response, 'PNG')
 		return response
-		
-		#temp = StringIO.StringIO()
-		#img.save(temp, format='PNG')
-		#filename = id_number + '.png'
-		#img_file = InMemoryUploadedFile(temp, None, filename, 'image/png', temp.len, None)
-		
-		#qr_image = QrImage()
-		#qr_image.qr_image.save(filename, img_file)
-		#qr_image.save()
-		#entry.qr = qr_image
-		#entry.save()
-		#return HttpResponseRedirect(request.GET['next'])
 	else:
 		return Http404
 

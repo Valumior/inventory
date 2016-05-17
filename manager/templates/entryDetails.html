@@ -9,11 +9,7 @@
 	<p>{{ entry.description }}</p>
 	<a class="btn btn-default" href="{% url 'editEntry' pk=entry.id_number %}">Edit</a>
 	<h3>QR code:</h3>
-	{% if not entry.qr %}
-		<a class="btn btn-default" href="{% url 'generateQr' pk=entry.id_number %}?next={{ request.path }}">Generate qr code</a>
-	{% else %}
-		<img src="{{ image }}"/>
-	{% endif %}
+	<img src="{{ image }}"/>
 	<h2>History</h2>
 	<table class="table table-bordered table-condensed">
 		<tr>

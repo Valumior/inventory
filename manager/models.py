@@ -20,12 +20,6 @@ class Room(models.Model):
 	def __unicode__(self):
 		return u'%s, %s' % (self.address, self.room_id)
 
-class QrImage(models.Model):
-	qr_image = models.ImageField(upload_to="qr/")
-	
-	def __unicode__(self):
-		return 'image'
-
 class Entry(models.Model):
 	id_number = models.CharField(max_length=30, primary_key=True)
 	date_added = models.DateTimeField(auto_now_add=True)
@@ -33,7 +27,6 @@ class Entry(models.Model):
 	name = models.CharField(max_length=50, blank=False)
 	description = models.TextField(max_length=500, null=True)
 	room = models.ForeignKey(Room, null=True)
-	qr = models.ForeignKey(QrImage, null=True)
 
 	def __unicode__(self):
 		return u'%s' % (self.id_number)
