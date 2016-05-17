@@ -179,6 +179,7 @@ def generateQrImage(request, pk=None):
 		
 		img = qr.make_image()
 		response = HttpResponse(mimetype='image/png')
+		img.save(response, 'PNG')
 		return response
 		
 		#temp = StringIO.StringIO()
