@@ -50,7 +50,7 @@ def loginView(request):
 		if request.method == 'GET':
 			if request.GET['next']:
 				_next = request.GET['next']
-	if 'login' in _next:
+	if 'login' in _next or 'register' in _next:
 		_next = '/'
 	return render(request, 'login.html', { 'formset' : formset.as_p(), 'Next' : _next, 'login_error' : login_error })
 	
@@ -230,10 +230,6 @@ def changeUserActiveStatus(request, pk=None):
 		if not user.is_superuser:
 			user.is_active = not user.is_active
 			user.save()
-			#if user.is_active and not Token.objects.get(user=user).exists():
-			#	Token.objects.create(user=user)
-			#elif not user.is_active and not Token.objects.get(user=user).exists():
-			#	Token.objects.get(user=user).delete()
 			#TODO send email?	
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 	
