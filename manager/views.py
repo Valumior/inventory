@@ -207,8 +207,9 @@ def userView(request):
 	if not request.user.is_staff:
 		raise PermissionDenied
 	inactive = User.objects.filter(is_active=False)
-	active = User.objects.filter(is_active=True)
-	return render(request, 'user.html', { 'inactiveUsers' : inactive, 'activeUsers' : active })
+	staff = User.objects.filter(is_active=True, is_staff=True)
+	active = User.objects.filter(is_active=True, is_staff=False)
+	return render(request, 'user.html', { 'inactiveUsers' : inactive, 'activeUsers' : active , 'staff' : staff})
 	
 @login_required(login_url='login')
 def userDetailsView(request, pk=None):
