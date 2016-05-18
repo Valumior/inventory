@@ -9,6 +9,12 @@
 	{% endfor %}
 	</div>
 {% endif %}
+<h2>Staff</h2>
+<div class="list-group">
+{% for selectedUser in activeUsers %}
+	<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ staff.username }}</a>
+{% endfor %}
+</div>
 <h2>Users</h2>
 <div class="list-group">
 {% for selectedUser in activeUsers %}
