@@ -77,12 +77,11 @@ def registrationView(request):
 @login_required(login_url='login')
 def mainView(request):
 	search = SearchForm(request.POST or None)
+	entries = Entry.objects.all()
 	if request.POST:
 		if search.is_valid():
 			searchString = search.cleaned_data['search']
-			entries = Entry.objects.filter(Q(id_number__contains=searchString) | Q(name__contains=searchString) | Q(description__contains=searchString))
-	else:
-		entries = Entry.objects.all()
+			entries = Entry.objects.filter(Q(id_number__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
 	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
 
 @login_required(login_url='login')
