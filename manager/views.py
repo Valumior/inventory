@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -75,8 +76,14 @@ def registrationView(request):
 
 @login_required(login_url='login')
 def mainView(request):
-	entries = Entry.objects.all()
-	return render(request, 'main.html', { 'entries' : entries })
+	search = SearchForm(request.POST or None)
+	if request.POST:
+		if search.is_valid():
+			searchString = search.cleaned_data['search']
+			entries = Entry.objects.filter(Q(id_number__contains=searchString) | Q(name__contains=searchString) | Q(description__contains=searchString))
+	else:
+		entries = Entry.objects.all()
+	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
 
 @login_required(login_url='login')
 def roomView(request):

@@ -5,6 +5,13 @@
 	{% if user.is_staff %}
 		<a class="btn btn-default" href="{% url 'addEntry' %}">Add entry</a>
 	{% endif %}
+	<form class="form-inline" method="post" action="{% url 'main' %}">
+		<div class="form group">
+		{% csrf_token %}
+		{{ search }}
+		</div>
+		<input type="submit" value="Search"/>
+	</form>
 	
 	{% include "entryList.html" %}
 
