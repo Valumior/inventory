@@ -16,10 +16,10 @@ class RoomSerializer(serializers.ModelSerializer):
 class EntrySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Entry
-		fields = ('id_number', 'name', 'description', 'room')
+		fields = ('signing', 'name', 'description', 'room')
 		depth = 2
 		
 class EntrySerializerShallow(serializers.ModelSerializer):
 	class Meta:
 		model = Entry
-		fields = ('id_number', 'name', 'description', 'room')
+		fields = ('signing', 'name', 'description', 'room')

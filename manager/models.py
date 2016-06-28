@@ -20,30 +20,52 @@ class Room(models.Model):
 	def __unicode__(self):
 		return u'%s, %s' % (self.address, self.room_id)
 
-class Entry(models.Model):
-	id_number = models.CharField(max_length=30, primary_key=True)
-	date_added = models.DateTimeField(auto_now_add=True)
-	last_modified = models.DateTimeField(auto_now=True)
-	name = models.CharField(max_length=50, blank=False)
-	description = models.TextField(max_length=500, null=True)
-	room = models.ForeignKey(Room, null=True)
-
+class Institution(models.model):
+	name_tag = models.CharField(max_length=20)
+	
 	def __unicode__(self):
-		return u'%s' % (self.id_number)
+		return u'%s' % (self.name_tag)
+
+class EntryGroup(models.model):
+	group_number = models.CharField(max_length=10)
+	group_count = models.PositiveIntegerField(default=0)
+	
+	def __unicode__(self):
+		return u'%s' % (self.group_number)
+
+class Entry(models.Model):
+	institution = models.ForeignKey(Institution, null=False)
+	group = models.ForeignKey(EntryGroup, null=False)
+	inventory_number = models.PositiveIntegerField()
+	name = models.CharField(max_length=100, blank=False)
+	date_added = models.DateTimeField()
+	added_description = models.TextField(max_length=250, blank=True)
+	date_removed = models.DateTimeField(null=True, blank=True)
+	removed_description = models.TextField(max_length=250, null=True, blank=True)
+	room = models.ForeignKey(Room, null=True)
+	description = models.TextField(max_length=500, null=True, blank=True)
+	signing = models.CharField(max_length=50)
+	last_modified = models.DateTimeField(auto_now=True)
+		
+	def __unicode__(self):
+		return u'%s' % (self.signing)
 		
 	def save(self, *args, **kwargs):
-		while not self.id_number:
-			ret = []
-			ret.extend('ITEM-')
-			ret.extend(random.sample(string.letters, 2))
-			ret.extend(random.sample(string.digits, 2))
-			ret.extend(random.sample(string.letters, 2))
-			ret.extend(random.sample(string.digits, 2))
+		
+		if not self.inventory_number:
+			self.group.group_count = self.group.group_count + 1
+			self.group.save()
+			self.inventory_number = self.group.group_count
+		
+		if not self.signing:
+			sign_sections = []
+			sign_sections.extend(self.institution.name_tag)
+			sign_sections.extend(', ')
+			sign_sections.extend(self.group.group_number)
+			sign_sections.extend('/')
+			sign_sections.extend(str(self.inventory_number))
 			
-			newid = ''.join(ret)
-			
-			if Entry.objects.filter(pk=newid).count() == 0:
-				self.id_number = newid
+			sign = ''.join(sign_sections)
 		
 		super(Entry, self).save(*args, **kwargs)
 
