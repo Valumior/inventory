@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from manager.models import Address, Room, Entry
+from manager.models import Address, Room, Entry, EntryGroup, Institution
 
 class AddresForm(ModelForm):
 	class Meta:
@@ -14,15 +14,25 @@ class RoomForm(ModelForm):
 		model = Room
 		fields = '__all__'
 
+class InstitutionForm(ModelForm):
+	class Meta:
+		model = Institution
+		fields = '__all__'
+
+class EntryGroupForm(ModelForm):
+	class Meta:
+		model = EntryGroup
+		fields = ('group_number')
+
 class EntryForm(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('name', 'description', 'room')
+		fields = ('institution', 'group', 'date_added', 'added_description', 'name', 'description', 'room')
 		
 class EntryFormSimple(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('room',)
+		fields = ('room', 'description')
 
 class UserForm(ModelForm):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())

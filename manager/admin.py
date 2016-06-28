@@ -5,4 +5,6 @@ from manager.models import *
 
 admin.site.register(Address)
 admin.site.register(Room)
+admin.site.register(Institution)
+admin.site.register(EntryGroup)
 admin.site.register(Entry)
