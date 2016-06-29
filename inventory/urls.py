@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^api/address/(?P<pk>\d+)/$', ManagerViews.apiAddress, name='apiAddress'),
     url(r'^api/address/(?P<pk>\d+)/rooms/$', ManagerViews.apiAddressRooms, name='apiAddressRooms'),
     url(r'^api/login/$', TokenViews.obtain_auth_token, name='apiLogin'),    
+    url(r'^api/permissions/$', ManagerViews.apiUserPermissions, name='apiPermissions'),    
 ]
 
 if settings.DEBUG is True:

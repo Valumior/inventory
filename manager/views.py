@@ -185,7 +185,7 @@ def generateQrImage(request, pk=None):
 	if pk:
 		entry = None
 		try:
-			entry = Entry.objects.get(id_number=pk)
+			entry = Entry.objects.get(signing=pk)
 		except ObjectDoesNotExist:
 			return HttpResponseRedirect(reverse('main'))
 		
@@ -295,7 +295,7 @@ def apiAddresses(request):
 
 @api_view(['GET', 'PUT'])
 def apiEntry(request, pk=None):
-	entry = get_object_or_404(Entry, id_number=pk)
+	entry = get_object_or_404(Entry, signing=pk)
 	
 	if request.method == 'GET':
 		serializer = EntrySerializer(entry, many=False)
@@ -351,6 +351,16 @@ def apiAddressRooms(request, pk=None):
 	if request.method == 'GET':
 		rooms = Room.objects.filter(address=address)
 		serializer = RoomSerializer(rooms, many=True)
+		return JSONResponse(serializer.data)
+	else:
+		raise Http404
+
+@api_view(['GET'])
+def apiUserPermissions(request)
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	
+	if request.method == 'GET':
+		serializer = UserPermissionsSerializer(permissions, many=False)
 		return JSONResponse(serializer.data)
 	else:
 		raise Http404

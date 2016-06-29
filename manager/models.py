@@ -53,7 +53,7 @@ class Entry(models.Model):
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
 	room = models.ForeignKey(Room, null=True)
 	description = models.TextField(max_length=500, null=True, blank=True)
-	signing = models.CharField(max_length=50)
+	signing = models.CharField(max_length=50, unique=True)
 	last_modified = models.DateTimeField(auto_now=True)
 		
 	def __unicode__(self):
