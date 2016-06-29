@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from manager.models import Address, Room, Entry
+from manager.models import Address, Room, Entry, UserPermissions
 
 class AddressSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -23,3 +23,9 @@ class EntrySerializerShallow(serializers.ModelSerializer):
 	class Meta:
 		model = Entry
 		fields = ('signing', 'name', 'description', 'room')
+
+class UserPermissionsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = UserPermissions
+		exclude = ('user')
+	

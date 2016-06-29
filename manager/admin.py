@@ -3,6 +3,7 @@ from manager.models import *
 
 # Register your models here.
 
+admin.site.register(UserPermissions)
 admin.site.register(Address)
 admin.site.register(Room)
 admin.site.register(Institution)

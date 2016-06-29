@@ -70,6 +70,8 @@ def registrationView(request):
 			user.last_name = formset.cleaned_data['last_name']
 			user.is_active = False
 			user.save()
+			perm = UserPermissions(user=user)
+			perm.save()
 			success = True
 			formset = UserForm()
 	return render(request, 'register.html', { 'formset' : formset.as_p(), 'success' : success })

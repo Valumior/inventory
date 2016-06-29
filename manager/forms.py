@@ -2,7 +2,12 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from manager.models import Address, Room, Entry, EntryGroup, Institution
+from manager.models import Address, Room, Entry, EntryGroup, Institution, UserPermissions
+
+class UserPermissionsForm(ModelForm):
+	class Meta:
+		model = UserPermissions
+		exclude = ('user')
 
 class AddresForm(ModelForm):
 	class Meta:

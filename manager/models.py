@@ -4,6 +4,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 import string, random
+
+class UserPermissions(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
+	is_admin = models.BooleanField(default=False)
+	is_session_controller = models.BooleanField(default=False)
+	is_edit_allowed = models.BooleanField(default=False)
+	is_add_allowed = models.BooleanField(default=False)
+	is_user_manager = models.BooleanField(default=False)
+	is_inventory = models.BooleanField(default=False)
 	
 class Address(models.Model):
 	city = models.CharField(max_length=100, blank=False)
