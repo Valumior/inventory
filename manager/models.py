@@ -53,7 +53,7 @@ class Entry(models.Model):
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
 	room = models.ForeignKey(Room, null=True)
 	description = models.TextField(max_length=500, null=True, blank=True)
-	signing = models.CharField(max_length=50, unique=True)
+	signing = models.CharField(max_length=50, unique=True, primary_key=True)
 	last_modified = models.DateTimeField(auto_now=True)
 		
 	def __unicode__(self):
@@ -84,3 +84,28 @@ class LogEntry(models.Model):
 	old_location = models.ForeignKey(Room, blank=False, related_name='old_location')
 	new_location = models.ForeignKey(Room, blank=False, related_name='new_location')
 	user = models.ForeignKey(User, blank=False, related_name='change_author')
+
+class InventoryOrder(models.Model):
+	date_ordered = models.DateTimeField(auto_now_add=True)
+	completed = models.BooleanField(default=False)
+	date_completed = models.DateTimeField(null=True, blank=True)
+	
+class InventoryRoomReport(models.Model):
+	room = models.ForeignKey(Room)
+	date_posted = models.DateTimeField(auto_add_now=True)
+	entries = models.ManyToManyField(Entry, through=InventoryEntryNote)
+	order = models.ForeignKey(InventoryOrder)
+	
+class InventoryEntryNote(models.Model):
+	MISSING = 'M'
+	PRESENT = 'P'
+	EXTRA = 'E'
+	STATUS_CHOICES = (
+		(MISSING, 'Missing'),
+		(PRESENT, 'Present'),
+		(EXTRA, 'Extra'),
+	)
+	
+	entry = models.ForeignKey(Entry)
+	status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+	report = models.ForeignKey(InventoryRoomReport)
