@@ -83,7 +83,7 @@ def mainView(request):
 	if request.POST:
 		if search.is_valid():
 			searchString = search.cleaned_data['search']
-			entries = Entry.objects.filter(Q(id_number__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
+			entries = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
 	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
 
 @login_required(login_url='login')
@@ -154,7 +154,7 @@ def addRoomView(request, pk=None):
 @login_required(login_url='login')
 def addEntryView(request, pk=None):
 	if pk:
-		entry = get_object_or_404(Entry, id_number=pk)
+		entry = get_object_or_404(Entry, signing=pk)
 		editing = True
 		old_room = entry.room
 	else:
@@ -196,7 +196,7 @@ def generateQrImage(request, pk=None):
 		
 		img = qr.make_image()
 		response = HttpResponse(content_type='image/png')
-		response['Content-Disposition'] = 'attachment; filename=%s' % (entry.id_number + '.png')
+		response['Content-Disposition'] = 'attachment; filename=%s' % (entry.signing + '.png')
 		img.save(response, 'PNG')
 		return response
 	else:
@@ -205,7 +205,7 @@ def generateQrImage(request, pk=None):
 @login_required(login_url='login')
 def entryDetailsView(request, pk=None):
 	if pk:
-		entry = get_object_or_404(Entry, id_number=pk)
+		entry = get_object_or_404(Entry, signing=pk)
 		logs = LogEntry.objects.filter(entry=entry)
 		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk })})
 	return HttpResponseRedirect(reverse('main'))

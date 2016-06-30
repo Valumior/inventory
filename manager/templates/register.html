@@ -2,14 +2,14 @@
 
 {% block content %}
 {% if success %}
-	<h2>Registriation successful</h2>
-	<p>Registriation has been completed successfully. The new user must be activated by an administrator.</p>
+	<h2>Rejestracja zakonczona</h2>
+	<p>Rejestracja zostala zakonczona pomyslnie. Nowy uzytkownik musi zostac aktywowany przez administratora.</p>
 {% else %}
-	<h2>Registriation</h2>
+	<h2>Rejestracja</h2>
 	<form method="post" action="{% url 'register' %}">
 		{% csrf_token %}
 		{{ formset }}
-		<input type="submit" value="Register"/>
+		<input type="submit" value="Zarejestruj"/>
 	</form>
 {% endif %}
 {% endblock %}

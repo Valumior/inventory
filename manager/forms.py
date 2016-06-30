@@ -48,13 +48,7 @@ class UserForm(ModelForm):
 		widgets = {
 				'password'	: forms.PasswordInput(),
 		}
-	"""	
-	def clean_email(self):
-		mail = self.cleaned_data['email']
-		if User.objects.filter(email=mail).exists():
-			raise ValidationError('Email already registered')
-		return mail
-	"""	
+	
 	def clean(self):
 		data = self.cleaned_data
 		if data['password'] != data['password2']:
