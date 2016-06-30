@@ -356,11 +356,42 @@ def apiAddressRooms(request, pk=None):
 		raise Http404
 
 @api_view(['GET'])
-def apiUserPermissions(request)
+def apiUserPermissions(request):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	
 	if request.method == 'GET':
 		serializer = UserPermissionsSerializer(permissions, many=False)
 		return JSONResponse(serializer.data)
+	else:
+		raise Http404
+
+@api_view(['GET'])
+def apiInventoryOrders(request):
+	if request.method == 'GET':
+		active_orders = InventoryOrder.objects.filter(completed=False)
+		serializer = InventoryOrderSerializer(active_orders, many=True)
+		return JSONResponse(serializer.data)
+	else:
+		raise Http404
+
+@api_view(['GET'])
+def apiOrderRooms(request, pk=None):
+	order = get_object_or_404(InventoryOrder, id=pk)
+	
+	if request.method == 'GET':
+		done_rooms = InventoryRoomReport.objects.filter(order=order).values('room')
+		remaining_rooms = Room.objects.exclude(id__in=done_rooms)
+		return JSONResponse(serializer.data)
+	else:
+		raise Http404
+
+@api_view(['POST'])
+def apiRoomReport(request):
+	if request.method == 'POST':
+		serializer = InventoryRoomReportSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return JSONResponse(serializer.data, status=201)
+		return JSONResponse(serializer.errors, status=400)
 	else:
 		raise Http404

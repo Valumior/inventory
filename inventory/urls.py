@@ -51,6 +51,9 @@ urlpatterns = [
     url(r'^api/address/$', ManagerViews.apiAddresses, name='apiAddresses'),
     url(r'^api/address/(?P<pk>\d+)/$', ManagerViews.apiAddress, name='apiAddress'),
     url(r'^api/address/(?P<pk>\d+)/rooms/$', ManagerViews.apiAddressRooms, name='apiAddressRooms'),
+    url(r'^api/order/$', ManagerViews.apiInventoryOrders, name='apiInventoryOrders'),
+    url(r'^api/order/(?P<pk>\d+)/rooms/$', ManagerViews.apiOrderRooms, name='apiOrderRooms'),
+    url(r'^api/report/$', ManagerViews.api, name='apiRoomReport'),
     url(r'^api/login/$', TokenViews.obtain_auth_token, name='apiLogin'),    
     url(r'^api/permissions/$', ManagerViews.apiUserPermissions, name='apiPermissions'),    
 ]
