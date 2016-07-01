@@ -15,3 +15,20 @@ class RoomTable(tables.Table):
 	class Meta:
 		model = Room
 		fields = ('room_id', 'address')
+
+class InventoryOrderTable(tables.Table):
+	class Meta:
+		model = InventoryOrder
+		fields = '__all__'
+
+class InventoryRoomReportTable(tables.Table):
+	class Meta:
+		model = InventoryRoomReport
+		fields = ('room', 'date_posted')
+
+class InventoryEntryNoteTable(table.Table):
+	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.signing') })
+	
+	class Meta:
+		model = InventoryEntryNote
+		fields = ('entry', 'status')
