@@ -6,6 +6,6 @@
 		<a class="btn btn-default btn" href="{% url 'addRoom' %}">Dodaj pomiesczenie</a>
 	{% endif %}
 	
-	{% include "roomList.html" %}
+	{% render_table rooms %}
 	
 {% endblock %}

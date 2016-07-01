@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h2>Add/Edit Entry</h2>
+	<h2>Dodaj/Edytuj Wpis</h2>
 	<form enctype="multipart/form-data" method="post" url="{% url 'addEntry' %}">
 		{% csrf_token %}
 		{{ formset }}
-		<button type="submit">Save entry</button>
+		<button type="submit">Zapisz</button>
 	</form>
 {% endblock %}

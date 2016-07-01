@@ -9,6 +9,11 @@ class UserPermissionsForm(ModelForm):
 		model = UserPermissions
 		exclude = ('user')
 
+class UserPermissionsFormNoAdmin(ModelForm):
+	class Meta:
+		model = UserPermissions
+		exclude = ('user', 'is_admin', 'is_user_manager')
+
 class AddresForm(ModelForm):
 	class Meta:
 		model = Address

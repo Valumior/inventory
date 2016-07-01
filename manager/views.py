@@ -14,6 +14,7 @@ from rest_framework.parsers import JSONParser
 from manager.models import *
 from manager.forms import *
 from manager.serializers import *
+from manager.tables import *
 
 import StringIO
 import qrcode
@@ -79,16 +80,19 @@ def registrationView(request):
 @login_required(login_url='login')
 def mainView(request):
 	search = SearchForm(request.POST or None)
-	entries = Entry.objects.all()
+	data = Entry.objects.all()
 	if request.POST:
 		if search.is_valid():
 			searchString = search.cleaned_data['search']
-			entries = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
+			data = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
+	entries = EntryTable(data)
+	RequestConfig(request).configure(entries)
 	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
 
 @login_required(login_url='login')
 def roomView(request):
-	rooms = Room.objects.all()
+	rooms = RoomTable(Room.objects.all())
+	RequestConfig(request).configure(rooms)
 	return render(request, 'room.html', { 'rooms' : rooms })
 	
 @login_required(login_url='login')
@@ -212,8 +216,10 @@ def entryDetailsView(request, pk=None):
 
 @login_required(login_url='login')
 def userView(request):
-	if not request.user.is_staff:
-		raise PermissionDenied
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.admin:
+		if not permissions.user_manager:
+			raise PermissionDenied
 	inactive = User.objects.filter(is_active=False)
 	staff = User.objects.filter(is_active=True, is_staff=True)
 	active = User.objects.filter(is_active=True, is_staff=False)
@@ -221,22 +227,30 @@ def userView(request):
 	
 @login_required(login_url='login')
 def userDetailsView(request, pk=None):
-	if not request.user.is_staff:
-		raise PermissionDenied
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.admin:
+		if not permissions.user_manager:
+			raise PermissionDenied
 	if pk is None:
 		raise Http404
 	user = get_object_or_404(User, id=pk)
-	return render(request, 'userDetails.html', { 'selectedUser' : user })
+	target_permissions = get_object_or_404(UserPermissions, user=user)
+	return render(request, 'userDetails.html', { 'selectedUser' : user , 'permissions' : permissions , 'target_permissions' : target_permissions })
 
 @login_required(login_url='login')
 def changeUserActiveStatus(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.admin:
+		if not permissions.user_manager:
+			raise PermissionDenied
 	if not request.user.is_staff:
 		raise PermissionDenied
 	if pk is None:
 		raise Http404
 	user = get_object_or_404(User, id=pk)
-	if not user.is_staff:
-		if not user.is_superuser:
+	target_permissions = get_object_or_404(UserPermissions, user=user)
+	if not target_permissions.admin:
+		if not target_permissions.user_manager:
 			user.is_active = not user.is_active
 			user.save()
 			#TODO send email?	
@@ -244,27 +258,42 @@ def changeUserActiveStatus(request, pk=None):
 	
 @login_required(login_url='login')
 def removeUser(request, pk=None):
-	if not request.user.is_staff:
-		raise PermissionDenied
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.admin:
+		if not permissions.user_manager:
+			raise PermissionDenied
 	if pk is None:
 		raise Http404
 	user = get_object_or_404(User, id=pk)
-	if not user.is_staff:
-		if not user.is_superuser:
+	target_permissions = get_object_or_404(UserPermissions, user=user)
+	if not target_permissions.admin:
+		if not target_permissions.user_manager:
 			user.delete()
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
 def changeUserRank(request, pk=None):
-	if not request.user.is_superuser:
-		raise PermissionDenied
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.admin:
+		if not permissions.user_manager:
+			raise PermissionDenied
 	if pk is None:
 		raise Http404
+	
 	user = get_object_or_404(User, id=pk)
-	if not user.is_superuser:
-		user.is_staff = not user.is_staff
-		user.save()
-	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
+	target_permissions = get_object_or_404(UserPermissions, user=user)
+	
+	if permissions.admin:
+		formset = UserPermissionsForm(request.POST or None, instance=target_permissions)
+	else:
+		formset = UserPermissionsFormNoAdmin(request.POST or None, instance=target_permissions)
+	
+	if request.method == 'POST':
+		if formset.is_valid():
+			perm = formset.save(commit=False)
+			perm.save()
+			return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
+	return render(request, 'userPermissionsEdit.html', { 'formset' : formset , 'pk' : pk })
 
 @api_view(['GET'])
 def apiEntries(request):

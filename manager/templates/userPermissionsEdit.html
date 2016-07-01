@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Edytuj przywileje</h2>
+	<form enctype="multipart/form-data" method="post" url="{% url 'userRank' pk=pk %}">
+		{% csrf_token %}
+		{{ formset }}
+		<button type="submit">Zapisz zmiany</button>
+	</form>
+{% endblock %}

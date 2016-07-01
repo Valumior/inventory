@@ -56,6 +56,7 @@ class Entry(models.Model):
 	short_description = models.TextField(max_length=150, null=True, blank=True)
 	description = models.TextField(max_length=500, null=True, blank=True)
 	last_modified = models.DateTimeField(auto_now=True)
+	caretaker = models.ForeignKey(User, null=True, blank=True)
 		
 	def __unicode__(self):
 		return u'%s' % (self.signing)

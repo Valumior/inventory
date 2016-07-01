@@ -1,30 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3> Username: {{ selectedUser.username }}</h3>
-<h4>Full name: {{ selectedUser.first_name }} {{ selectedUser.last_name }}</h4>
-<h4>Mail: {{ selectedUser.email }}</h4>
-<h4>Last login: {{ selectedUser.last_login }}</h4>
-{% if selectedUser.is_superuser %}
-	<h4>Status: Superuser</h4>
+<h3>Uzytkownik: {{ selectedUser.username }}</h3>
+<h4>Pelne imie: {{ selectedUser.first_name }} {{ selectedUser.last_name }}</h4>
+<h4>Adres e-mail: {{ selectedUser.email }}</h4>
+<h4>Ostatnie logowanie: {{ selectedUser.last_login }}</h4>
+{% if selectedUser.is_active %}
+	<h4>Status: Aktywny</h4>
+	{% if permissions.is_admin or permissions.is_user_manager %}
+		<a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Deaktywuj uzytkownika</a>
+	{% endif %}
+	<h4>Przywileje</h4>
+	<ul>
+		<li>Administrator: {% if target_permissions.is_admin %}Tak{% else %}Nie{% endif %}</li>
+		<li>Zarzadzanie uzytkowanikami: {% if target_permissions.is_user_manager %}Tak{% else %}Nie{% endif %}</li>
+		<li>Edycja wpisow: {% if target_permissions.is_edit_allowed %}Tak{% else %}Nie{% endif %}</li>
+		<li>Dodawanie wpisow: {% if target_permissions.is_add_allowed %}Tak{% else %}Nie{% endif %}</li>
+		<li>Zlecanie inwentaryzacji: {% if target_permissions.is_session_controller %}Tak{% else %}Nie{% endif %}</li>
+		<li>Przeprowadzanie inwentaryzacji: {% if target_permissions.is_inventory %}Tak{% else %}Nie{% endif %}</li>
+	</ul>
+	{% if permissions.is_admin or permissions.is_user_manager %}
+		<a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Edytuj</a>
+	{% endif %}
 {% else %}
-	{% if selectedUser.is_active %}
-		{% if selectedUser.is_staff %}
-			<h4>Status: Staff</h4>
-			{% if user.is_superuser %}
-			<h4><a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Demote user</a></h4>
-			{% endif %}
-		{% else %}
-			<h4>Status: Active</h4>
-			{% if user.is_superuser %}
-			<h4><a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Promote to staff</a></h4>
-			{% endif %}
-			<h4><a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Deactivate user</a></h4>
-		{% endif %}
-	{% else %}
-		<h4>Status: Inactive</h4>
-		<h4><a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Activate user</a></h4>
-		<h4><a class="btn btn-default" href="{% url 'userRemove' pk=selectedUser.id %}">Remove user</a></h4>
+	<h4>Status: Nieaktywny</h4>
+	{% if permissions.is_admin or permissions.is_user_manager %}
+		<h4><a class="btn btn-default" href="{% url 'userActivate' pk=selectedUser.id %}">Aktywuj uzytkownika</a></h4>
+		<h4><a class="btn btn-default" href="{% url 'userRemove' pk=selectedUser.id %}">Usun uzytkownika</a></h4>
 	{% endif %}
 {% endif %}
 {% endblock %}
