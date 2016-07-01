@@ -36,13 +36,14 @@ class Institution(models.model):
 		return u'%s' % (self.name_tag)
 
 class EntryGroup(models.model):
-	group_number = models.CharField(max_length=10)
+	group_number = models.CharField(max_length=10, unique=True)
 	group_count = models.PositiveIntegerField(default=0)
 	
 	def __unicode__(self):
 		return u'%s' % (self.group_number)
 
 class Entry(models.Model):
+	signing = models.CharField(max_length=50, unique=True, primary_key=True)
 	institution = models.ForeignKey(Institution, null=False)
 	group = models.ForeignKey(EntryGroup, null=False)
 	inventory_number = models.PositiveIntegerField()
@@ -52,8 +53,8 @@ class Entry(models.Model):
 	date_removed = models.DateTimeField(null=True, blank=True)
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
 	room = models.ForeignKey(Room, null=True)
+	short_description = models.TextField(max_length=150, null=True, blank=True)
 	description = models.TextField(max_length=500, null=True, blank=True)
-	signing = models.CharField(max_length=50, unique=True, primary_key=True)
 	last_modified = models.DateTimeField(auto_now=True)
 		
 	def __unicode__(self):
