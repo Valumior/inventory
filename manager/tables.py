@@ -4,7 +4,7 @@ from manager.models import *
 from manager.util import URLify_entry_signing
 
 class EntryTable(tables.Table):
-	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : URLify_entry_signing(A('signing')) })
+	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('getURL') })
 	
 	class Meta:
 		model = Entry
@@ -38,7 +38,7 @@ class InventoryRoomReportTable(tables.Table):
 		return 'Szczegoly'
 
 class InventoryEntryNoteTable(tables.Table):
-	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : URLify_entry_signing(A('entry.signing')) })
+	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.getURL') })
 	
 	class Meta:
 		model = InventoryEntryNote
