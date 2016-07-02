@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
@@ -332,7 +333,7 @@ def inventoryOrderReportsView(request, pk=None):
 	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	order = get_object_or_404(InventoryOrder, pk=pk)
-	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order)
+	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order))
 	RequestConfig(request).configure(order_reports)
 	
 	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'order' : order })
@@ -344,7 +345,7 @@ def inventoryReportDetailsView(request, pk=None):
 	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	report = get_object_or_404(InventoryRoomReport, pk=pk)
-	inventorty_notes = InventoryEntryNoteTable(InventoryEntryNote.filter(report=report)
+	inventorty_notes = InventoryEntryNoteTable(InventoryEntryNote.filter(report=report))
 	RequestConfig(request).configure(inventory_notes)
 	
 	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventorty_notes' : inventorty_notes , 'report' : report })

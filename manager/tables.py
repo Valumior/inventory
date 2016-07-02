@@ -1,5 +1,5 @@
 import django_tables2 as tables
-import django_tables2.utils import A
+from django_tables2.utils import A
 from manager.models import *
 
 class EntryTable(tables.Table):
@@ -36,7 +36,7 @@ class InventoryRoomReportTable(tables.Table):
 	def render_edit(self):
 		return 'Szczegoly'
 
-class InventoryEntryNoteTable(table.Table):
+class InventoryEntryNoteTable(tables.Table):
 	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.signing') })
 	
 	class Meta:

@@ -29,13 +29,13 @@ class Room(models.Model):
 	def __unicode__(self):
 		return u'%s, %s' % (self.address, self.room_id)
 
-class Institution(models.model):
+class Institution(models.Model):
 	name_tag = models.CharField(max_length=20)
 	
 	def __unicode__(self):
 		return u'%s' % (self.name_tag)
 
-class EntryGroup(models.model):
+class EntryGroup(models.Model):
 	group_number = models.CharField(max_length=10, unique=True)
 	group_count = models.PositiveIntegerField(default=0)
 	
@@ -95,8 +95,8 @@ class InventoryOrder(models.Model):
 	
 class InventoryRoomReport(models.Model):
 	room = models.ForeignKey(Room)
-	date_posted = models.DateTimeField(auto_add_now=True)
-	entries = models.ManyToManyField(Entry, through=InventoryEntryNote)
+	date_posted = models.DateTimeField(auto_now_add=True)
+	entries = models.ManyToManyField(Entry, through='InventoryEntryNote')
 	author = models.ForeignKey(User)
 	order = models.ForeignKey(InventoryOrder)
 	

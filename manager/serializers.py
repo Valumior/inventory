@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from manager.models import Address, Room, Entry, UserPermissions
+from manager.models import *
 
 class AddressSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -46,9 +46,9 @@ class InventoryRoomReportSerializer(serializers.ModelSerializer):
 		model = InventoryRoomReport
 		fields = ('room', 'entries', 'order')
 	
-	def create(self, validated_data)
-	entries_data = validated_data.pop('entries')
-	inventoryRoomReport = InventoryRoomReport.objects.create(**validated_data)
-	for entry_data in entries_data:
-		InventoryEntryNote.objects.create(report=inventoryRoomReport, **entry_data)
-	return inventoryRoomReport
+	def create(self, validated_data):
+		entries_data = validated_data.pop('entries')
+		inventoryRoomReport = InventoryRoomReport.objects.create(**validated_data)
+		for entry_data in entries_data:
+			InventoryEntryNote.objects.create(report=inventoryRoomReport, **entry_data)
+		return inventoryRoomReport
