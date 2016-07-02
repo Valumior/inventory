@@ -175,10 +175,13 @@ def addEntryView(request, pk=None):
 		entry = Entry()
 		editing = False
 	
-	if permissions.is_admin:
+	if permissions.is_admin and not editing:
 		formset = EntryForm(request.POST or None, instance=entry)
 	elif editing:
-		formset = EntryFormSimple(request.POST or None, instance=entry)
+		if permissions.is_admin:
+			formset = EntryEditForm(request.POST or None, instance=entry)
+		else:
+			formset = EntryFormSimple(request.POST or None, instance=entry)
 	else:
 		raise PermissionDenied
 	

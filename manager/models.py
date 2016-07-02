@@ -77,6 +77,7 @@ class Entry(models.Model):
 			sign_sections.extend(str(self.inventory_number))
 			
 			sign = ''.join(sign_sections)
+			self.signing = sign
 		
 		super(Entry, self).save(*args, **kwargs)
 

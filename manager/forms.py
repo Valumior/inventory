@@ -37,12 +37,17 @@ class EntryGroupForm(ModelForm):
 class EntryForm(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('institution', 'group', 'date_added', 'added_description', 'name', 'description', 'room')
-		
+		fields = ('institution', 'group', 'date_added', 'added_description', 'name', 'short_description', 'description', 'room', 'caretaker')
+
+class EntryEditForm(ModelForm):
+	class Meta:
+		model = Entry
+		fields = ('date_added', 'added_description', 'name', 'short_description', 'description', 'room', 'caretaker')
+
 class EntryFormSimple(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('room', 'description')
+		fields = ('room', 'short_description','description')
 
 class UserForm(ModelForm):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
