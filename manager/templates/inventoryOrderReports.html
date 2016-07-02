@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Raporty dla zlecenia {{ order }}</h1>
+	{% render_table order_reports %}
+{% endblock %}

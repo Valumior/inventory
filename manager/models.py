@@ -96,6 +96,7 @@ class InventoryRoomReport(models.Model):
 	room = models.ForeignKey(Room)
 	date_posted = models.DateTimeField(auto_add_now=True)
 	entries = models.ManyToManyField(Entry, through=InventoryEntryNote)
+	author = models.ForeignKey(User)
 	order = models.ForeignKey(InventoryOrder)
 	
 class InventoryEntryNote(models.Model):

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Zlecenia Inwentaryzacyjne</h1>
+	{% if permissions.is_admin or premissions.is_session_controller %}
+		<a href="{% url 'createInventoryOrder' %}" class="btn btn-default">Dodaj zlecenie</a>
+	{% endif %}
+	{% render_table orders %}
+{% endblock %}

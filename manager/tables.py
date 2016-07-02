@@ -17,14 +17,24 @@ class RoomTable(tables.Table):
 		fields = ('room_id', 'address')
 
 class InventoryOrderTable(tables.Table):
+	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=())
+	
 	class Meta:
 		model = InventoryOrder
-		fields = '__all__'
+		fields = ('completed', 'date_ordered', 'date_completed', 'details')
+	
+	def render_edit(self):
+		return 'Szczegoly'
 
 class InventoryRoomReportTable(tables.Table):
+	details = tables.LinkColumn('inventoryReportDetails', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=())
+	
 	class Meta:
 		model = InventoryRoomReport
-		fields = ('room', 'date_posted')
+		fields = ('room', 'date_posted', 'author', 'details')
+	
+	def render_edit(self):
+		return 'Szczegoly'
 
 class InventoryEntryNoteTable(table.Table):
 	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.signing') })

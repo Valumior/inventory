@@ -119,7 +119,8 @@ def addressDetailView(request, pk=None):
 	
 @login_required(login_url='login')
 def addAddressView(request, pk=None):
-	if not request.user.is_staff:
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
 		raise PermissionDenied
 	if pk:
 		address = get_object_or_404(Address, pk=pk)
@@ -138,7 +139,8 @@ def addAddressView(request, pk=None):
 
 @login_required(login_url='login')
 def addRoomView(request, pk=None):
-	if not request.user.is_staff:
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
 		raise PermissionDenied
 	if pk:
 		room = get_object_or_404(Room, pk=pk)
@@ -157,15 +159,23 @@ def addRoomView(request, pk=None):
 	
 @login_required(login_url='login')
 def addEntryView(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
 	if pk:
+		if not permissions.is_admin:
+			if not permissions.is_add_allowed:
+				raise PermissionDenied
 		entry = get_object_or_404(Entry, signing=pk)
 		editing = True
 		old_room = entry.room
 	else:
+		if not permissions.is_admin:
+			if not permissions.is_add_allowed:
+				if not permissions.is_edit_allowed:
+					raise PermissionDenied
 		entry = Entry()
 		editing = False
 	
-	if request.user.is_staff:
+	if permissions.is_admin:
 		formset = EntryForm(request.POST or None, instance=entry)
 	elif editing:
 		formset = EntryFormSimple(request.POST or None, instance=entry)
@@ -217,8 +227,8 @@ def entryDetailsView(request, pk=None):
 @login_required(login_url='login')
 def userView(request):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.admin:
-		if not permissions.user_manager:
+	if not permissions.is_admin:
+		if not permissions.is_user_manager:
 			raise PermissionDenied
 	inactive = User.objects.filter(is_active=False)
 	staff = User.objects.filter(is_active=True, is_staff=True)
@@ -228,8 +238,8 @@ def userView(request):
 @login_required(login_url='login')
 def userDetailsView(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.admin:
-		if not permissions.user_manager:
+	if not permissions.is_admin:
+		if not permissions.is_user_manager:
 			raise PermissionDenied
 	if pk is None:
 		raise Http404
@@ -240,8 +250,8 @@ def userDetailsView(request, pk=None):
 @login_required(login_url='login')
 def changeUserActiveStatus(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.admin:
-		if not permissions.user_manager:
+	if not permissions.is_admin:
+		if not permissions.is_user_manager:
 			raise PermissionDenied
 	if not request.user.is_staff:
 		raise PermissionDenied
@@ -249,8 +259,8 @@ def changeUserActiveStatus(request, pk=None):
 		raise Http404
 	user = get_object_or_404(User, id=pk)
 	target_permissions = get_object_or_404(UserPermissions, user=user)
-	if not target_permissions.admin:
-		if not target_permissions.user_manager:
+	if not target_permissions.is_admin:
+		if not target_permissions.is_user_manager:
 			user.is_active = not user.is_active
 			user.save()
 			#TODO send email?	
@@ -259,23 +269,23 @@ def changeUserActiveStatus(request, pk=None):
 @login_required(login_url='login')
 def removeUser(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.admin:
-		if not permissions.user_manager:
+	if not permissions.is_admin:
+		if not permissions.is_user_manager:
 			raise PermissionDenied
 	if pk is None:
 		raise Http404
 	user = get_object_or_404(User, id=pk)
 	target_permissions = get_object_or_404(UserPermissions, user=user)
-	if not target_permissions.admin:
-		if not target_permissions.user_manager:
+	if not target_permissions.is_admin:
+		if not target_permissions.is_user_manager:
 			user.delete()
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
 def changeUserRank(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.admin:
-		if not permissions.user_manager:
+	if not permissions.is_admin:
+		if not permissions.is_user_manager:
 			raise PermissionDenied
 	if pk is None:
 		raise Http404
@@ -294,6 +304,47 @@ def changeUserRank(request, pk=None):
 			perm.save()
 			return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 	return render(request, 'userPermissionsEdit.html', { 'formset' : formset , 'pk' : pk })
+
+@login_required(login_url='login')
+def inventoryOrderView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	orders = InventoryOrderTable(InventoryOrder.objects.all())
+	RequestConfig(request).configure(orders)
+	
+	return render(request, 'inventoryOrder.html', { 'permissions' : permissions , 'orders' : orders })
+	
+def createInventoryOrder(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_session_controller:
+			raise PermissionDenied
+	order = InventoryOrder()
+	order.save()
+	return HttpResponseRedirect(reverse('inventoryOrder'))
+
+@login_required(login_url='login')
+def inventoryOrderReportsView(request, pk=None):
+	if not pk:
+		raise Http404
+	
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	order = get_object_or_404(InventoryOrder, pk=pk)
+	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order)
+	RequestConfig(request).configure(order_reports)
+	
+	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'order' : order })
+
+@login_required(login_url='login')
+def inventoryReportDetailsView(request, pk=None):
+	if not pk:
+		raise Http404
+	
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	report = get_object_or_404(InventoryRoomReport, pk=pk)
+	inventorty_notes = InventoryEntryNoteTable(InventoryEntryNote.filter(report=report)
+	RequestConfig(request).configure(inventory_notes)
+	
+	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventorty_notes' : inventorty_notes , 'report' : report })
 
 @api_view(['GET'])
 def apiEntries(request):
@@ -419,8 +470,11 @@ def apiRoomReport(request):
 	if request.method == 'POST':
 		serializer = InventoryRoomReportSerializer(data=request.data)
 		if serializer.is_valid():
-			serializer.save()
+			report = serializer.save()
+			report.user = request.user
+			report.save()
 			return JSONResponse(serializer.data, status=201)
 		return JSONResponse(serializer.errors, status=400)
 	else:
 		raise Http404
+		

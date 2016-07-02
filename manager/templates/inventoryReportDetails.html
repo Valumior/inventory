@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Szczegoly raportu {{ report }}</h1>
+	<h3>Pokoj: {{ report.room }}</h3>
+	<h3>Autor: {{ report.author }}</h3>
+	{% render_table inventory_notes %}
+{% endblock %}
