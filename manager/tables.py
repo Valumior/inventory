@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from django_tables2.utils import A
 from manager.models import *
-from manager.utils import URLify_entry_singing
+from manager.util import URLify_entry_singing
 
 class EntryTable(tables.Table):
 	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : URLify_entry_singing(A('signing')) })

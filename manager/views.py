@@ -16,7 +16,7 @@ from manager.models import *
 from manager.forms import *
 from manager.serializers import *
 from manager.tables import *
-from manager.utils import deURLify_entry_signing
+from manager.util import deURLify_entry_signing
 
 import StringIO
 import qrcode

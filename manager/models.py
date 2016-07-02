@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-from manager.utils import URLify_entry_singing
+from manager.util import URLify_entry_singing
 
 import string, random
 
