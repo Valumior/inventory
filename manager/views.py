@@ -16,6 +16,7 @@ from manager.models import *
 from manager.forms import *
 from manager.serializers import *
 from manager.tables import *
+from manager.utils import deURLify_entry_signing
 
 import StringIO
 import qrcode
@@ -165,7 +166,7 @@ def addEntryView(request, pk=None):
 		if not permissions.is_admin:
 			if not permissions.is_add_allowed:
 				raise PermissionDenied
-		entry = get_object_or_404(Entry, signing=pk)
+		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		editing = True
 		old_room = entry.room
 	else:
@@ -203,11 +204,11 @@ def generateQrImage(request, pk=None):
 	if pk:
 		entry = None
 		try:
-			entry = Entry.objects.get(signing=pk)
+			entry = Entry.objects.get(signing=deURLify_entry_signing(pk))
 		except ObjectDoesNotExist:
 			return HttpResponseRedirect(reverse('main'))
 		
-		id_number = entry.id_number
+		signing = entry.signing
 		qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
 		qr.add_data(id_number)
 		qr.make(fit=True)
@@ -223,7 +224,7 @@ def generateQrImage(request, pk=None):
 @login_required(login_url='login')
 def entryDetailsView(request, pk=None):
 	if pk:
-		entry = get_object_or_404(Entry, signing=pk)
+		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		logs = LogEntry.objects.filter(entry=entry)
 		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk })})
 	return HttpResponseRedirect(reverse('main'))
@@ -379,7 +380,7 @@ def apiAddresses(request):
 
 @api_view(['GET', 'PUT'])
 def apiEntry(request, pk=None):
-	entry = get_object_or_404(Entry, signing=pk)
+	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 	
 	if request.method == 'GET':
 		serializer = EntrySerializer(entry, many=False)

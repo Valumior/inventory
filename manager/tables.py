@@ -1,9 +1,10 @@
 import django_tables2 as tables
 from django_tables2.utils import A
 from manager.models import *
+from manager.utils import URLify_entry_singing
 
 class EntryTable(tables.Table):
-	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('signing') })
+	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : URLify_entry_singing(A('signing')) })
 	
 	class Meta:
 		model = Entry
@@ -37,7 +38,7 @@ class InventoryRoomReportTable(tables.Table):
 		return 'Szczegoly'
 
 class InventoryEntryNoteTable(tables.Table):
-	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.signing') })
+	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : URLify_entry_singing(A('entry.signing')) })
 	
 	class Meta:
 		model = InventoryEntryNote

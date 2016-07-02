@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from manager.utils import URLify_entry_singing
 
 import string, random
 
@@ -80,6 +81,9 @@ class Entry(models.Model):
 			self.signing = sign
 		
 		super(Entry, self).save(*args, **kwargs)
+		
+	def getURL(self):
+		return URLify_entry_singing(self.signing)
 
 class LogEntry(models.Model):
 	entry = models.ForeignKey(Entry, blank=False)

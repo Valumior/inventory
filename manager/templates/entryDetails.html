@@ -12,7 +12,7 @@
 	<h4>Ostatnia modyfikacja - {{ entry.last_modified }}</h4>
 	<h3>Opis:</h3>
 	<p>{{ entry.description }}</p>
-	<a class="btn btn-default" href="{% url 'editEntry' pk=entry.signing %}">Edytuj</a>
+	<a class="btn btn-default" href="{% url 'editEntry' pk=entry.getURL %}">Edytuj</a>
 	<h3>Kod QR:</h3>
 	<img src="{{ image }}"/>
 	<h2>Historia</h2>
