@@ -215,7 +215,7 @@ def generateQrImage(request, pk=None):
 		
 		img = qr.make_image()
 		response = HttpResponse(content_type='image/png')
-		response['Content-Disposition'] = 'attachment; filename=%s' % (entry.signing + '.png')
+		response['Content-Disposition'] = 'attachment; filename="%s"' % (entry.signing + '.png')
 		img.save(response, 'PNG')
 		return response
 	else:
