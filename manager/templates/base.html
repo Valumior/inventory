@@ -14,8 +14,9 @@
 				<li><a href="{% url 'main' %}">Glowna</a></li>
 				<li><a href="{% url 'address' %}">Adresy</a></li>
 				<li><a href="{% url 'room' %}">Pomieszczenia</a></li>
+				<li><a href="{% url 'inventoryOrder' %}">Zlecenia Inwentaryzacyjne</a></li>
 				{% if user.is_staff %}
-					<li><a href="{% url 'user' %}">Uytkownicy</a></li>
+					<li><a href="{% url 'user' %}">Uzytkownicy</a></li>
 				{% endif %}
 				{% if user.is_authenticated %}
 					<li><a href="{% url 'logout' %}">Wyloguj {{ user.get_username }}</a></li>
