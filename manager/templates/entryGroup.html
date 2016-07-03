@@ -7,7 +7,7 @@
 	{% endif %}
 	<div class="list-group">
 		{% for group in groups %}
-			<a class="list-group-item" href="{% url 'entryGroupDetails' pk=group.id %}">{{ group.group_number }}</li>
+			<a class="list-group-item" href="{% url 'entryGroupDetails' pk=group.id %}">{{ group.group_number }}</a>
 		{% endfor %}
 	</div>
 {% endblock %}
