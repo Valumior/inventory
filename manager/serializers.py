@@ -27,12 +27,12 @@ class EntrySerializerShallow(serializers.ModelSerializer):
 class UserPermissionsSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserPermissions
-		exclude = ('user')
+		exclude = ('user',)
 
 class InventoryOrderSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = InventoryOrder
-		exclude = ('date_completed')
+		exclude = ('date_completed',)
 
 class InventoryEntryNoteSerializer(serializers.ModelSerializer):
 	class Meta:
