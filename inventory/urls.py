@@ -1,18 +1,3 @@
-"""inventory URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
@@ -47,6 +32,11 @@ urlpatterns = [
     url(r'^order/create/$', ManagerViews.createInventoryOrder, name='createInventoryOrder'),
     url(r'^order/(?P<pk>\d+)/$', ManagerViews.inventoryOrderReportsView, name='inventoryOrderReports'),
     url(r'^report/(?P<pk>\d+)/$', ManagerViews.inventoryReportDetailsView, name='inventoryReportDetails'),
+    url(r'^group/$', ManagerViews.entryGroupView, name='entryGroup'),
+    url(r'^group/add/$', ManagerViews.addEntryGroupView, name='addEntryGroup'),
+    url(r'^group/(?P<pk>\d+)/$', ManagerViews.entryGroupDetailsView, name='entryGroupDetails'),
+    url(r'^institution/$', ManagerViews.institutionView, name='institution'),
+    url(r'^institution/add/$', ManagerViews.addInstitutionView, name='addInstitution'),
     url(r'^api/entry/$', ManagerViews.apiEntries, name='apiEntries'),
     url(r'^api/entry/(?P<pk>[a-zA-Z0-9_\-.,]+)/$', ManagerViews.apiEntry, name='apiEntry'),
     url(r'^api/room/$', ManagerViews.apiRooms, name='apiRooms'),

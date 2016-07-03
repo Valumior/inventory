@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Instytucje</h1>
+	<ul class="list-group">
+		{% for institution in institutions %}
+			<li class="list-group-item">{{ institution.name_tag }}</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

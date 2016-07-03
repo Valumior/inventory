@@ -318,6 +318,7 @@ def inventoryOrderView(request):
 	
 	return render(request, 'inventoryOrder.html', { 'permissions' : permissions , 'orders' : orders })
 	
+@login_required(login_url='login')
 def createInventoryOrder(request):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	if not permissions.is_admin:
@@ -351,6 +352,51 @@ def inventoryReportDetailsView(request, pk=None):
 	
 	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventorty_notes' : inventorty_notes , 'report' : report })
 
+@login_required(login_url='login')
+def entryGroupView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	groups = EntryGroup.objects.all()
+	return render(request, 'entryGroup.html', { 'groups' : groups , 'permissions' : permissions })
+
+@login_required(login_url='login')
+def entryGroupDetailsView(request, pk=None):
+	if not pk:
+		raise Http404
+	group = get_object_or_404(EntryGroup, pk=pk)
+	entries = EntryTable(Entry.objects.filter(group=group))
+	RequestConfig(request).configure(entries)
+	return render(request, 'entryGroupDetails.html', { 'group' : group , 'entries' : entries })
+	
+@login_required(login_url='login')
+def addEntryGroupView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		raise PermissionDenied
+	formset = EntryGroupForm(request.POST or None)
+	if request.method == 'POST':
+		if formset.is_valid():
+			formset.save()
+			return HttpResponseRedirect(reverse('entryGroup'))
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Grupe', 'form_url' : 'addEntryGroup'})
+
+@login_required(login_url='login')
+def institutionView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	institutions = Institution.objects.all()
+	return render(request, 'institution', { 'institutions' : institutions , 'permissions' : permissions })
+
+@login_required(login_url='login')
+def addInstitutionView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		raise PermissionDenied
+	formset = InstitutionForm(request.POST or None)
+	if request.method == 'POST':
+		if formset.is_valid():
+			formset.save()
+			return HttpResponseRedirect(reverse('institution'))
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Instytucje', 'form_url' : 'addInstitution'})
+	
 @api_view(['GET'])
 def apiEntries(request):
 	if request.method == 'GET':

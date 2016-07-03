@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Grupy</h1>
+	<ul class="list-group">
+		{% for group in groups %}
+			<li class="list-group-item">{{ group.group_number }}</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
