@@ -5,9 +5,9 @@
 	{% if permissions.is_admin %}
 		<a class="btn btn-default" href="{% url 'addEntryGroup' %}">Dodaj grupe</a>
 	{% endif %}
-	<ul class="list-group">
+	<div class="list-group">
 		{% for group in groups %}
-			<li class="list-group-item">{{ group.group_number }}</li>
+			<a class="list-group-item" href="{% url 'entryGroupDetails' pk=group.id %}">{{ group.group_number }}</li>
 		{% endfor %}
-	</ul>
+	</div>
 {% endblock %}
