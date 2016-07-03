@@ -347,7 +347,7 @@ def inventoryReportDetailsView(request, pk=None):
 	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	report = get_object_or_404(InventoryRoomReport, pk=pk)
-	inventorty_notes = InventoryEntryNoteTable(InventoryEntryNote.filter(report=report))
+	inventorty_notes = InventoryEntryNoteTable(InventoryEntryNote.objects.filter(report=report))
 	RequestConfig(request).configure(inventory_notes)
 	
 	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventorty_notes' : inventorty_notes , 'report' : report })
