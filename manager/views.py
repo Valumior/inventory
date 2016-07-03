@@ -510,7 +510,7 @@ def apiOrderRooms(request, pk=None):
 	order = get_object_or_404(InventoryOrder, id=pk)
 	
 	if request.method == 'GET':
-		done_rooms = InventoryRoomReport.objects.filter(order=order).values('room')
+		done_rooms = InventoryRoomReport.objects.filter(order=order).values_list('room__id', flat=True)
 		remaining_rooms = Room.objects.exclude(id__in=done_rooms)
 		return JSONResponse(serializer.data)
 	else:
