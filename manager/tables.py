@@ -17,6 +17,13 @@ class RoomTable(tables.Table):
 		model = Room
 		fields = ('room_id', 'address')
 
+class UserPermissionsTable(tables.Table):
+	user = tables.LinkColumn('userDetails', kwargs={ 'pk' : A('user.id') })
+	
+	class Meta:
+		model = UserPermissions
+		fields = '__all__'
+
 class InventoryOrderTable(tables.Table):
 	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=())
 	

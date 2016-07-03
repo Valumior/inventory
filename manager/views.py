@@ -236,9 +236,9 @@ def userView(request):
 		if not permissions.is_user_manager:
 			raise PermissionDenied
 	inactive = User.objects.filter(is_active=False)
-	staff = User.objects.filter(is_active=True, is_staff=True)
-	active = User.objects.filter(is_active=True, is_staff=False)
-	return render(request, 'user.html', { 'inactiveUsers' : inactive, 'activeUsers' : active , 'staff' : staff})
+	active = UserPermissionsTable(UserPermissions.objects.filter(user__is_active=True))
+	RequestConfig(request).configure(active)
+	return render(request, 'user.html', { 'inactiveUsers' : inactive, 'activeUsers' : active })
 	
 @login_required(login_url='login')
 def userDetailsView(request, pk=None):

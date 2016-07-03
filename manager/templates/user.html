@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
 {% if inactiveUsers %}
@@ -9,16 +10,6 @@
 	{% endfor %}
 	</div>
 {% endif %}
-<h2>Staff</h2>
-<div class="list-group">
-{% for selectedUser in staff %}
-	<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ selectedUser.username }}</a>
-{% endfor %}
-</div>
-<h2>Users</h2>
-<div class="list-group">
-{% for selectedUser in activeUsers %}
-	<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ selectedUser.username }}</a>
-{% endfor %}
-</div>
+<h2>Uzytkownicy</h2>
+{% render_table activeUsers %}
 {% endblock %}
