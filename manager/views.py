@@ -350,7 +350,7 @@ def inventoryReportDetailsView(request, pk=None):
 	inventory_notes = InventoryEntryNoteTable(InventoryEntryNote.objects.filter(report=report))
 	RequestConfig(request).configure(inventory_notes)
 	
-	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventorty_notes' : inventory_notes , 'report' : report })
+	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventory_notes' : inventory_notes , 'report' : report })
 
 @login_required(login_url='login')
 def entryGroupView(request):
