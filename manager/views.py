@@ -512,6 +512,7 @@ def apiOrderRooms(request, pk=None):
 	if request.method == 'GET':
 		done_rooms = InventoryRoomReport.objects.filter(order=order).values_list('room__id', flat=True)
 		remaining_rooms = Room.objects.exclude(id__in=done_rooms)
+		serializer = RoomSerializer(remaining_rooms, many=True)
 		return JSONResponse(serializer.data)
 	else:
 		raise Http404
