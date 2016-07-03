@@ -35,6 +35,8 @@ class InventoryOrderSerializer(serializers.ModelSerializer):
 		exclude = ('date_completed',)
 
 class InventoryEntryNoteSerializer(serializers.ModelSerializer):
+	entry = serializers.PrimaryKeyRelatedField(read_only=True)
+	
 	class Meta:
 		model = InventoryEntryNote
 		fields = ('entry', 'status')
