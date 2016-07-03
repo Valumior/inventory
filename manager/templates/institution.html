@@ -2,6 +2,9 @@
 
 {% block content %}
 	<h1>Instytucje</h1>
+	{% if permissions.is_admin %}
+		<a class="btn btn-default" href="{% url 'addInstitution' %}">Dodaj instytucje</a>
+	{% endif %}
 	<ul class="list-group">
 		{% for institution in institutions %}
 			<li class="list-group-item">{{ institution.name_tag }}</li>

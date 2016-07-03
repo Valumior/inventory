@@ -383,7 +383,7 @@ def addEntryGroupView(request):
 def institutionView(request):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	institutions = Institution.objects.all()
-	return render(request, 'institution', { 'institutions' : institutions , 'permissions' : permissions })
+	return render(request, 'institution.html', { 'institutions' : institutions , 'permissions' : permissions })
 
 @login_required(login_url='login')
 def addInstitutionView(request):

@@ -22,7 +22,7 @@ class UserPermissionsTable(tables.Table):
 	
 	class Meta:
 		model = UserPermissions
-		fields = '__all__'
+		fields = ('user', 'is_admin', 'is_user_manager', 'is_add_allowed', 'is_edit_allowed', 'is_session_controller', 'is_inventory')
 
 class InventoryOrderTable(tables.Table):
 	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=())
