@@ -523,7 +523,7 @@ def apiRoomReport(request):
 		serializer = InventoryRoomReportSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save(author=request.user)
-			return JSONResponse(serializer.data, status=201)
+			return JSONResponse(serializer.errors, status=201)
 		return JSONResponse(serializer.errors, status=400)
 	else:
 		raise Http404
