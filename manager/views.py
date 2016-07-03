@@ -522,9 +522,7 @@ def apiRoomReport(request):
 	if request.method == 'POST':
 		serializer = InventoryRoomReportSerializer(data=request.data)
 		if serializer.is_valid():
-			report = serializer.save(commit=False)
-			report.user = request.user
-			report.save()
+			serializer.save(author=request.user)
 			return JSONResponse(serializer.data, status=201)
 		return JSONResponse(serializer.errors, status=400)
 	else:
