@@ -298,7 +298,7 @@ def changeUserRank(request, pk=None):
 	user = get_object_or_404(User, id=pk)
 	target_permissions = get_object_or_404(UserPermissions, user=user)
 	
-	if permissions.admin:
+	if permissions.is_admin:
 		formset = UserPermissionsForm(request.POST or None, instance=target_permissions)
 	else:
 		formset = UserPermissionsFormNoAdmin(request.POST or None, instance=target_permissions)

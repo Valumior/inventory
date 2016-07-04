@@ -31,7 +31,7 @@ class Room(models.Model):
 		return u'%s, %s' % (self.address, self.room_id)
 
 class Institution(models.Model):
-	name_tag = models.CharField(max_length=20)
+	name_tag = models.CharField(max_length=20, unique=True)
 	
 	def __unicode__(self):
 		return u'%s' % (self.name_tag)
