@@ -258,8 +258,6 @@ def changeUserActiveStatus(request, pk=None):
 	if not permissions.is_admin:
 		if not permissions.is_user_manager:
 			raise PermissionDenied
-	if not request.user.is_staff:
-		raise PermissionDenied
 	if pk is None:
 		raise Http404
 	user = get_object_or_404(User, id=pk)
@@ -297,6 +295,8 @@ def changeUserRank(request, pk=None):
 	
 	user = get_object_or_404(User, id=pk)
 	target_permissions = get_object_or_404(UserPermissions, user=user)
+	if target_permissions.is_admin:
+		raise PermissionDenied
 	
 	if permissions.is_admin:
 		formset = UserPermissionsForm(request.POST or None, instance=target_permissions)
