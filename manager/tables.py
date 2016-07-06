@@ -9,6 +9,7 @@ class EntryTable(tables.Table):
 	class Meta:
 		model = Entry
 		fields = ('signing', 'name', 'date_added', 'date_removed', 'room', 'short_description', 'last_modified')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class RoomTable(tables.Table):
 	room_id = tables.LinkColumn('roomDetails', kwargs={ 'pk' : A('pk') })
@@ -16,6 +17,7 @@ class RoomTable(tables.Table):
 	class Meta:
 		model = Room
 		fields = ('room_id', 'address')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class UserPermissionsTable(tables.Table):
 	user = tables.LinkColumn('userDetails', kwargs={ 'pk' : A('user.id') })
@@ -23,6 +25,7 @@ class UserPermissionsTable(tables.Table):
 	class Meta:
 		model = UserPermissions
 		fields = ('user', 'is_admin', 'is_user_manager', 'is_add_allowed', 'is_edit_allowed', 'is_session_controller', 'is_inventory')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class InventoryOrderTable(tables.Table):
 	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=())
@@ -30,6 +33,7 @@ class InventoryOrderTable(tables.Table):
 	class Meta:
 		model = InventoryOrder
 		fields = ('completed', 'date_ordered', 'date_completed', 'details')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
 	
 	def render_edit(self):
 		return 'Szczegoly'
@@ -40,6 +44,7 @@ class InventoryRoomReportTable(tables.Table):
 	class Meta:
 		model = InventoryRoomReport
 		fields = ('room', 'date_posted', 'author', 'details')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
 	
 	def render_edit(self):
 		return 'Szczegoly'
@@ -50,3 +55,4 @@ class InventoryEntryNoteTable(tables.Table):
 	class Meta:
 		model = InventoryEntryNote
 		fields = ('entry', 'status')
+		attrs = { 'class' : 'table table-bordered table-condensed' }
