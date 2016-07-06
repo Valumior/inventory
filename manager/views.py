@@ -117,7 +117,7 @@ def addressView(request):
 		addressess = AddressTable(Address.objects.all())
 	else:
 		addressess = AddressTableNoEdit(Address.objects.all())
-	RequestConfig(request).configure(addresses)
+	RequestConfig(request).configure(addressess)
 	return render(request, 'address.html', { 'addressess' : addressess })
 	
 @login_required(login_url='login')
