@@ -32,12 +32,20 @@ class EntryTable(tables.Table):
 		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class RoomTable(tables.Table):
-	room_id = tables.LinkColumn('roomDetails', kwargs={ 'pk' : A('pk') })
+	room_id = tables.LinkColumn('roomDetails', kwargs={ 'pk' : A('pk') }, attrs = { 'class' : 'btn btn-default' })
+	edit = tables.LinkColumn('editRoom', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
 	
 	class Meta:
 		model = Room
-		fields = ('room_id', 'address')
+		fields = ('room_id', 'address', ;edit')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
+		
+	def render_edit(self):
+		return 'Edytuj'
+
+class RoomTableNoEdit(RoomTable):
+	class Meta:
+		exclude = ('edit',)
 
 class UserPermissionsTable(tables.Table):
 	user = tables.LinkColumn('userDetails', kwargs={ 'pk' : A('user.id') }, attrs = { 'class' : 'btn btn-default' })

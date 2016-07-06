@@ -93,7 +93,11 @@ def mainView(request):
 
 @login_required(login_url='login')
 def roomView(request):
-	rooms = RoomTable(Room.objects.all())
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if permissions.is_admin:
+		rooms = RoomTable(Room.objects.all())
+	else:
+		rooms = RoomTableNoEdit(Room.objects.all())
 	RequestConfig(request).configure(rooms)
 	return render(request, 'room.html', { 'rooms' : rooms })
 	
