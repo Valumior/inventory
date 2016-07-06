@@ -4,20 +4,14 @@ from manager.models import *
 from manager.util import URLify_entry_signing
 
 class AddressTable(tables.Table):
-	details = tables.LinkColumn('addressDetails', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
-	edit = tables.LinkColumn('editAddress', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
+	details = tables.LinkColumn('addressDetails', kwargs={ 'pk' : A('pk') }, orderable=False, static_text='Szczegoly', empty_values=(), attrs = { 'class' : 'btn btn-default' })
+	edit = tables.LinkColumn('editAddress', kwargs={ 'pk' : A('pk') }, orderable=False, static_text='Edytuj', empty_values=(), attrs = { 'class' : 'btn btn-default' })
 	
 	class Meta:
 		model = Address
 		fields = ('city', 'street', 'street_number', 'details', 'edit')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
 		
-	def render_details(self):
-		return 'Szczegoly'
-		
-	def render_edit(self):
-		return 'Edytuj'
-
 class AddressTableNoEdit(AddressTable):
 	class Meta:
 		exclude = ('edit',)
@@ -33,15 +27,12 @@ class EntryTable(tables.Table):
 
 class RoomTable(tables.Table):
 	room_id = tables.LinkColumn('roomDetails', kwargs={ 'pk' : A('pk') }, attrs = { 'class' : 'btn btn-default' })
-	edit = tables.LinkColumn('editRoom', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
+	edit = tables.LinkColumn('editRoom', kwargs={ 'pk' : A('pk') }, orderable=False, static_text='Edytuj', empty_values=(), attrs = { 'class' : 'btn btn-default' })
 	
 	class Meta:
 		model = Room
 		fields = ('room_id', 'address', 'edit')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
-		
-	def render_edit(self):
-		return 'Edytuj'
 
 class RoomTableNoEdit(RoomTable):
 	class Meta:
@@ -56,7 +47,7 @@ class UserPermissionsTable(tables.Table):
 		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class InventoryOrderTable(tables.Table):
-	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
+	details = tables.LinkColumn('inventoryOrderReports', kwargs={ 'pk' : A('pk') }, orderable=False, static_text='Szczegoly', empty_values=(), attrs = { 'class' : 'btn btn-default' })
 	
 	class Meta:
 		model = InventoryOrder
@@ -67,7 +58,7 @@ class InventoryOrderTable(tables.Table):
 		return 'Szczegoly'
 
 class InventoryRoomReportTable(tables.Table):
-	details = tables.LinkColumn('inventoryReportDetails', kwargs={ 'pk' : A('pk') }, orderable=False, empty_values=(), attrs = { 'class' : 'btn btn-default' })
+	details = tables.LinkColumn('inventoryReportDetails', kwargs={ 'pk' : A('pk') }, orderable=False, static_text='Szczegoly', empty_values=(), attrs = { 'class' : 'btn btn-default' })
 	
 	class Meta:
 		model = InventoryRoomReport
