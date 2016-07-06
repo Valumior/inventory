@@ -8,24 +8,24 @@ import string, random
 
 class UserPermissions(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
-	is_admin = models.BooleanField(default=False)
-	is_session_controller = models.BooleanField(default=False)
-	is_edit_allowed = models.BooleanField(default=False)
-	is_add_allowed = models.BooleanField(default=False)
-	is_user_manager = models.BooleanField(default=False)
-	is_inventory = models.BooleanField(default=False)
+	is_admin = models.BooleanField(default=False, verbose_name='Administrator')
+	is_session_controller = models.BooleanField(default=False, verbose_name='Kontroler sesji')
+	is_edit_allowed = models.BooleanField(default=False, verbose_name='Edycja wpisow')
+	is_add_allowed = models.BooleanField(default=False, verbose_name='Dodawanie wpisow')
+	is_user_manager = models.BooleanField(default=False, verbose_name='Zarzadzanie uzytkownikami')
+	is_inventory = models.BooleanField(default=False, verbose_name='Inwentaryzacja')
 	
 class Address(models.Model):
-	city = models.CharField(max_length=100, blank=False)
-	street = models.CharField(max_length=200, blank=False)
-	street_number = models.CharField(max_length=20, blank=False)
+	city = models.CharField(max_length=100, blank=False, verbose_name='Miasto')
+	street = models.CharField(max_length=200, blank=False, verbose_name='Ulica')
+	street_number = models.CharField(max_length=20, blank=False, verbose_name='Numer')
 	
 	def __unicode__(self):
 		return u'%s %s %s' % (self.city, self.street, self.street_number)
 	
 class Room(models.Model):
-	room_id = models.CharField(max_length=20, blank=False)
-	address = models.ForeignKey(Address, blank=False)
+	room_id = models.CharField(max_length=20, blank=False, verbose_name='Identyfikator pokoju')
+	address = models.ForeignKey(Address, blank=False, verbose_name='Adres')
 
 	def __unicode__(self):
 		return u'%s, %s' % (self.address, self.room_id)
@@ -44,20 +44,20 @@ class EntryGroup(models.Model):
 		return u'%s' % (self.group_number)
 
 class Entry(models.Model):
-	signing = models.CharField(max_length=50, unique=True, primary_key=True)
+	signing = models.CharField(max_length=50, unique=True, primary_key=True, verbose_name='Oznakowanie')
 	institution = models.ForeignKey(Institution, null=False)
 	group = models.ForeignKey(EntryGroup, null=False)
 	inventory_number = models.PositiveIntegerField()
-	name = models.CharField(max_length=100, blank=False)
-	date_added = models.DateTimeField()
+	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
+	date_added = models.DateTimeField(verbose_name='Data dodania')
 	added_description = models.TextField(max_length=250, blank=True)
-	date_removed = models.DateTimeField(null=True, blank=True)
+	date_removed = models.DateTimeField(null=True, blank=True, verbose_name='Data likwidacji')
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
-	room = models.ForeignKey(Room, null=True)
-	short_description = models.TextField(max_length=150, null=True, blank=True)
+	room = models.ForeignKey(Room, null=True, verbose_name='Pomieszczenie')
+	short_description = models.TextField(max_length=150, null=True, blank=True, verbose_name='Krotki opis')
 	description = models.TextField(max_length=500, null=True, blank=True)
-	last_modified = models.DateTimeField(auto_now=True)
-	caretaker = models.ForeignKey(User, null=True, blank=True)
+	last_modified = models.DateTimeField(auto_now=True, verbose_name='Ostatnia modyfikacja')
+	caretaker = models.ForeignKey(User, null=True, blank=True, verbose_name='Opiekun')
 		
 	def __unicode__(self):
 		return u'%s' % (self.signing)
@@ -98,10 +98,10 @@ class InventoryOrder(models.Model):
 	date_completed = models.DateTimeField(null=True, blank=True)
 	
 class InventoryRoomReport(models.Model):
-	room = models.ForeignKey(Room)
-	date_posted = models.DateTimeField(auto_now_add=True)
+	room = models.ForeignKey(Room, verbose_name='Pomieszczenie')
+	date_posted = models.DateTimeField(auto_now_add=True, verbose_name='Data')
 	entries = models.ManyToManyField(Entry, through='InventoryEntryNote')
-	author = models.ForeignKey(User, null=True, blank=True)
+	author = models.ForeignKey(User, null=True, blank=True, verbose_name='Autor')
 	order = models.ForeignKey(InventoryOrder)
 	
 class InventoryEntryNote(models.Model):
@@ -109,11 +109,11 @@ class InventoryEntryNote(models.Model):
 	PRESENT = 'P'
 	EXTRA = 'E'
 	STATUS_CHOICES = (
-		(MISSING, 'Missing'),
-		(PRESENT, 'Present'),
-		(EXTRA, 'Extra'),
+		(MISSING, 'Brak'),
+		(PRESENT, 'Obecny'),
+		(EXTRA, 'Dodatkowy'),
 	)
 	
-	entry = models.ForeignKey(Entry)
-	status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+	entry = models.ForeignKey(Entry, verbose_name='Przedmiot')
+	status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name='Status')
 	report = models.ForeignKey(InventoryRoomReport)
