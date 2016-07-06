@@ -1,20 +1,11 @@
 {% extends "base.html" %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
 	<h1>Adresy</h1>
 	{% if user.is_staff %}
 		<a class="btn btn-default" href="{% url 'addAddress' %}">Dodaj adres</a>
 	{% endif %}
-	<table class="table table-bordered table-condensed">
-		<tr>
-			<th>Address</th>
-			<th>Edit</th>
-		</tr>
-		{% for address in addressess %}
-			<tr>
-				<td><a class="btn btn-primary btn-block" href="{% url 'addressDetails' pk=address.id %}">{{ address }}</a></td>
-				<td><a class="btn btn-default btn-block" href="{% url 'editAddress' pk=address.id %}">Edit</a></td>
-			</tr> 
-		{% endfor %}
-	</table>
+	
+	{% render_table addressess %}
 {% endblock %}

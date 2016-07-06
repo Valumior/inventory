@@ -107,7 +107,12 @@ def roomDetailsView(request, pk=None):
 	
 @login_required(login_url='login')
 def addressView(request):
-	addressess = Address.objects.all()
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if permissions.is_admin:
+		addressess = AddressTable(Address.objects.all())
+	else:
+		addressess = AddressTableNoEdit(Address.objects.all())
+	RequestConfig(request).configure(addresses)
 	return render(request, 'address.html', { 'addressess' : addressess })
 	
 @login_required(login_url='login')
