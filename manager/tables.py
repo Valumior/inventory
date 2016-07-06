@@ -37,7 +37,7 @@ class RoomTable(tables.Table):
 	
 	class Meta:
 		model = Room
-		fields = ('room_id', 'address', ;edit')
+		fields = ('room_id', 'address', 'edit')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
 		
 	def render_edit(self):

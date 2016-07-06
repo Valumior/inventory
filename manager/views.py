@@ -105,7 +105,8 @@ def roomView(request):
 def roomDetailsView(request, pk=None):
 	if pk:
 		room = get_object_or_404(Room, id=pk)
-		entries = Entry.objects.filter(room=room)
+		entries = EntryTable(Entry.objects.filter(room=room))
+		RequestConfig(request).configure(entries)
 		return render(request, 'roomDetails.html', { 'room' : room , 'entries' : entries })
 	return HttpResponseRedirect(reverse('room'))
 	
@@ -123,8 +124,15 @@ def addressView(request):
 def addressDetailView(request, pk=None):
 	if pk:
 		address = get_object_or_404(Address, id=pk)
-		rooms = Room.objects.filter(address=address)
-		entries = Entry.objects.filter(room__address=address)
+		permissions = get_object_or_404(UserPermissions, user=request.user)
+		if permissions.is_admin:
+			rooms = RoomTable(Room.objects.filter(address=address), prefix='r-')
+		else:
+			rooms = RoomTableNoEdit(Room.objects.filter(address=address))
+		entries = EntryTable(Entry.objects.filter(room__address=address))
+		config = RequestConfig(request)
+		config.configure(rooms)
+		config.configure(entries)
 		return render(request, 'addressDetails.html', { 'address' : address , 'rooms' : rooms , 'entries' : entries })
 	return HttpResponseRedirect(reverse('address'))
 	
