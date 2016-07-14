@@ -53,9 +53,6 @@ class InventoryOrderTable(tables.Table):
 		model = InventoryOrder
 		fields = ('completed', 'date_ordered', 'date_completed', 'details')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
-	
-	def render_details(self):
-		return 'Szczegoly'
 
 class InventoryRoomReportTable(tables.Table):
 	details = tables.LinkColumn('inventoryReportDetails', kwargs={ 'pk' : A('pk') }, orderable=False, text='Szczegoly', empty_values=(), attrs={ 'a' :  { 'class' : 'btn btn-default' }})
@@ -64,9 +61,6 @@ class InventoryRoomReportTable(tables.Table):
 		model = InventoryRoomReport
 		fields = ('room', 'date_posted', 'author', 'details')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
-	
-	def render_details(self):
-		return 'Szczegoly'
 
 class InventoryEntryNoteTable(tables.Table):
 	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.getURL') }, attrs={ 'a' :  { 'class' : 'btn btn-default' }})
