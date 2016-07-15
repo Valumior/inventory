@@ -22,7 +22,7 @@ class EntryTable(tables.Table):
 	
 	class Meta:
 		model = Entry
-		fields = ('signing', 'name', 'date_added', 'date_removed', 'room', 'short_description', 'last_modified')
+		fields = ('signing', 'name', 'date_added', 'added_price', 'date_removed', 'removed_price', 'room', 'short_description', 'last_modified')
 		attrs = { 'class' : 'table table-bordered table-condensed' }
 
 class RoomTable(tables.Table):
