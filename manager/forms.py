@@ -37,7 +37,7 @@ class EntryGroupForm(ModelForm):
 class EntryForm(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('institution', 'group', 'date_added', 'added_description', 'name', 'short_description', 'description', 'room', 'caretaker')
+		fields = ('institution', 'group', 'date_added', 'added_description', 'added_price', 'name', 'short_description', 'description', 'room', 'caretaker')
 
 class EntryEditForm(ModelForm):
 	class Meta:

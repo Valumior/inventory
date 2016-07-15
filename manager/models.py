@@ -31,31 +31,34 @@ class Room(models.Model):
 		return u'%s, %s' % (self.address, self.room_id)
 
 class Institution(models.Model):
-	name_tag = models.CharField(max_length=20, unique=True)
+	name_tag = models.CharField(max_length=20, unique=True, verbose_name='Identyfikator instytucji')
 	
 	def __unicode__(self):
 		return u'%s' % (self.name_tag)
 
 class EntryGroup(models.Model):
-	group_number = models.CharField(max_length=10, unique=True)
+	group_number = models.CharField(max_length=10, unique=True, verbose_name='Identyfikator grupy')
 	group_count = models.PositiveIntegerField(default=0)
+	description = models.TextField(max_length=500, null=True, blank=True, verbose_name='Opis')
 	
 	def __unicode__(self):
 		return u'%s' % (self.group_number)
 
 class Entry(models.Model):
 	signing = models.CharField(max_length=50, unique=True, primary_key=True, verbose_name='Oznakowanie')
-	institution = models.ForeignKey(Institution, null=False)
-	group = models.ForeignKey(EntryGroup, null=False)
+	institution = models.ForeignKey(Institution, null=False, verbose_name='Instytucja')
+	group = models.ForeignKey(EntryGroup, null=False, verbose_name='Grupa')
 	inventory_number = models.PositiveIntegerField()
 	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
 	date_added = models.DateTimeField(verbose_name='Data dodania')
+	added_value = models.DecimalField(max_digits=10, decimal_places=2, blank=False, verbose_name='Wartosc poczatkowa')
 	added_description = models.TextField(max_length=250, blank=True)
 	date_removed = models.DateTimeField(null=True, blank=True, verbose_name='Data likwidacji')
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
+	removed_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Wartosc likwidacji')
 	room = models.ForeignKey(Room, null=True, verbose_name='Pomieszczenie')
 	short_description = models.TextField(max_length=150, null=True, blank=True, verbose_name='Krotki opis')
-	description = models.TextField(max_length=500, null=True, blank=True)
+	description = models.TextField(max_length=500, null=True, blank=True, verbose_name='Opis')
 	last_modified = models.DateTimeField(auto_now=True, verbose_name='Ostatnia modyfikacja')
 	caretaker = models.ForeignKey(User, null=True, blank=True, verbose_name='Opiekun')
 		
