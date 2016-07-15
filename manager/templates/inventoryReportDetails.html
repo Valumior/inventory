@@ -2,7 +2,8 @@
 {% load render_table from django_tables2 %}
 
 {% block content %}
-	<h1>Szczegoly raportu {{ report }}</h1>
+	<h1>Szczegoly raportu</h1>
+	<h3>Zlecenie: {{ report.order }}</h3>
 	<h3>Pokoj: {{ report.room }}</h3>
 	<h3>Autor: {{ report.author }}</h3>
 	{% render_table inventory_notes %}
