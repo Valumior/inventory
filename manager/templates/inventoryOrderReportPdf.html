@@ -1,0 +1,77 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block extra_style %}
+	<style type="text/css">
+		h1, h2 { text-align: center }
+		
+		.text-right { text-align: right }
+		
+	</style>
+{% endblock %}
+
+{% block content %}
+	<div>
+		<p class="text-right">........................., {{ today|date:"DATETIME_FORMAT" }}</p>
+		<h1>Raport z Inwentaryzacji</h1>
+		<h2>Srodki trwale zgodne ze stanem</h2>
+		<table>
+			<tr>
+				<th>Oznakowanie</th>
+				<th>Nazwa</th>
+				<th>Pomieszczenie</th>
+				<th>Status</th>
+			</tr>
+			{% for entry in present_entries %}
+				<tr>
+					<td>{{ entry.entry.signing }}</td>
+					<td>{{ entry.entry.name }}</td>
+					<td>{{ entry.entry.room }}</td>
+					<td>{{ entry.status }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		{% if misplaced_entries or missing_entries %}
+			{% if mispalced_entries %}
+				<h1>Rozbieznosci</h1>
+				<h2>Srodki trwale w niezgodnych lokalizacjach</h2>
+				<table>
+					<tr>
+						<th>Oznakowanie</th>
+						<th>Nazwa</th>
+						<th>Pomieszczenie</th>
+						<th>Odnaleziono</th>
+						<th>Status</th>
+					</tr>
+					{% for entry in misplaced_entries %}
+						<tr>
+							<td>{{ entry.entry.signing }}</td>
+							<td>{{ entry.entry.name }}</td>
+							<td>{{ entry.entry.room }}</td>
+							<td>{{ entry.report.room }}</td>
+							<td>{{ entry.status }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% endif %}
+			{% if missing_entries %}
+				<h2>Brakujace srodki trwale</h2>
+				<table>
+					<tr>
+						<th>Oznakowanie</th>
+						<th>Nazwa</th>
+						<th>Pomieszczenie</th>
+						<th>Status</th>
+					</tr>
+					{% for entry in missing_entries %}
+						<tr>
+						<td>{{ entry.entry.signing }}</td>
+						<td>{{ entry.entry.name }}</td>
+						<td>{{ entry.entry.room }}</td>
+						<td>{{ entry.status }}</td>
+					</tr>
+					{% endfor %}
+				</table>
+			{% endif %}
+		{% endif %}
+	</div>
+{% endblock %}

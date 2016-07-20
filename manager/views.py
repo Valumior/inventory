@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_tables2 import RequestConfig
+from easy_pdf.rendering import render_to_pdf_response
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
@@ -347,9 +348,6 @@ def createInventoryOrder(request):
 
 @login_required(login_url='login')
 def inventoryOrderReportsView(request, pk=None):
-	if not pk:
-		raise Http404
-	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	order = get_object_or_404(InventoryOrder, pk=pk)
 	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order), prefix='rr-')
@@ -359,19 +357,40 @@ def inventoryOrderReportsView(request, pk=None):
 	config.configure(order_reports)
 	config.configure(remaining_rooms)
 	
-	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'remaining_rooms' : remaining_rooms , 'order' : order })
+	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'remaining_rooms' : remaining_rooms , 'order' : order , 'finish' : Room.objects.exclude(id__in=done_rooms).exists() })
 
 @login_required(login_url='login')
 def inventoryReportDetailsView(request, pk=None):
-	if not pk:
-		raise Http404
-	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	report = get_object_or_404(InventoryRoomReport, pk=pk)
 	inventory_notes = InventoryEntryNoteTable(InventoryEntryNote.objects.filter(report=report))
 	RequestConfig(request).configure(inventory_notes)
 	
 	return render(request, 'inventoryReportDetails.html', { 'permissions' : permissions , 'inventory_notes' : inventory_notes , 'report' : report })
+
+@login_required(login_url='login')
+def generateInventoryOrderReport(request, pk=None):
+	order = get_object_or_404(InventoryOrder, pk=pk)
+	reports = InventoryRoomReport.filter(order=order)
+	entries = InventoryEntryNote.filter(report__in=reports)
+	present_entries = entries.filter(status='P')
+	misplaced_entries = entries.filter(status='E').exclude(entry__in=present_entries.value('entry'))
+	missing_entries = entries.filter.(status='M').exclude(entry__in=misplaced_entries.value('entry'))
+	return render_to_pdf_response(request, 'inventoryOrderReportPdf.html', { 'present_entries' : present_entries , 'misplaced_entries' : misplaced_entries , 'missing_entries' : missing_entries })
+
+@login_required(login_url='login')
+def finishInventoryOrder(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_session_controller:
+			raise PermissionDenied
+	order = get_object_or_404(InventoryOrder, pk=pk)
+	done_rooms = InventoryRoomReport.objects.filter(order=order).values_list('room__id', flat=True)
+	if Room.objects.exclude(id__in=done_rooms).exists():
+		raise PermissionDenied
+	order.completed = True
+	order.date_completed = datetime.datetime.now()
+	return HttpResponseRedirect(reverse('inventoryOrderReports', kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
 def entryGroupView(request):

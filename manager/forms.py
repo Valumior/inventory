@@ -32,7 +32,7 @@ class InstitutionForm(ModelForm):
 class EntryGroupForm(ModelForm):
 	class Meta:
 		model = EntryGroup
-		fields = ('group_number',)
+		fields = ('group_number', 'description')
 
 class EntryForm(ModelForm):
 	class Meta:

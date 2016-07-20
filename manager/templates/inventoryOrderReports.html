@@ -2,8 +2,20 @@
 {% load render_table from django_tables2 %}
 
 {% block content %}
-	<h1>Raporty dla zlecenia {{ order }}</h1>
+	<h1>Zlecenie: {{ order }}</h1>
+	<h3>Data rozpoczecia: {{ order.date_added }}</h3>
+	{% if not finish %}
+		{% if order.completed %}
+			<h3>Data zakonczenia: {{ order.date_completed }}</h3>
+			<a class="btn btn-default" href="{% url 'generateInventoryOrderReport' pk=order.id %}">Wygeneruj raport</a>
+		{% else %}
+			<a class="btn btn-default" href="{% url 'finishInventoryOrder' pk=order.id %}">Zakoncz inwentaryzacje</a>
+		{% endif %}
+	{% endif %}
+	<h2>Raporty dla zlecenia</h2>
 	{% render_table order_reports %}
-	<h2>Pozostale pomieszczenia</h2>
-	{% render_table remaining_rooms %}
+	{% if finish %}
+		<h2>Pozostale pomieszczenia</h2>
+		{% render_table remaining_rooms %}
+	{% endif %}
 {% endblock %}
