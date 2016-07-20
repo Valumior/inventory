@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_tables2',
+    'easy_pdf',
     'manager',
 ]
 
