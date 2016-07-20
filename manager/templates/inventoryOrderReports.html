@@ -4,4 +4,6 @@
 {% block content %}
 	<h1>Raporty dla zlecenia {{ order }}</h1>
 	{% render_table order_reports %}
+	<h2>Pozostale pomieszczenia</h2>
+	{% render_table remaining_rooms %}
 {% endblock %}

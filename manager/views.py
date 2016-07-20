@@ -128,8 +128,8 @@ def addressDetailView(request, pk=None):
 		if permissions.is_admin:
 			rooms = RoomTable(Room.objects.filter(address=address), prefix='r-')
 		else:
-			rooms = RoomTableNoEdit(Room.objects.filter(address=address))
-		entries = EntryTable(Entry.objects.filter(room__address=address))
+			rooms = RoomTableNoEdit(Room.objects.filter(address=address), prefix='r-')
+		entries = EntryTable(Entry.objects.filter(room__address=address), prefix='e-')
 		config = RequestConfig(request)
 		config.configure(rooms)
 		config.configure(entries)
@@ -352,10 +352,14 @@ def inventoryOrderReportsView(request, pk=None):
 	
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	order = get_object_or_404(InventoryOrder, pk=pk)
-	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order))
-	RequestConfig(request).configure(order_reports)
+	order_reports = InventoryRoomReportTable(InventoryRoomReport.objects.filter(order=order), prefix='rr-')
+	done_rooms = InventoryRoomReport.objects.filter(order=order).values_list('room__id', flat=True)
+	remaining_rooms = RoomTableNoEdit(Room.objects.exclude(id__in=done_rooms), prefix='r-')
+	config = RequestConfig(request)
+	config.configure(order_reports)
+	config.configure(remaining_rooms)
 	
-	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'order' : order })
+	return render(request, 'inventoryOrderReports.html', { 'permissions' : permissions , 'order_reports' : order_reports , 'remaining_rooms' : remaining_rooms , 'order' : order })
 
 @login_required(login_url='login')
 def inventoryReportDetailsView(request, pk=None):
