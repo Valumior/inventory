@@ -1,5 +1,5 @@
 import string
-from manager.models import *
+from manager.models import LogEntry
 
 def URLify_entry_signing(signing):
 	return string.replace(string.replace(signing,'/','__'),' ','_')
