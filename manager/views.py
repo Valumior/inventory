@@ -17,7 +17,7 @@ from manager.models import *
 from manager.forms import *
 from manager.serializers import *
 from manager.tables import *
-from manager.util import deURLify_entry_signing
+from manager.util import deURLify_entry_signing, logEntryChange
 
 import StringIO
 import qrcode
@@ -186,7 +186,6 @@ def addEntryView(request, pk=None):
 				raise PermissionDenied
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		editing = True
-		old_room = entry.room
 	else:
 		if not permissions.is_admin:
 			if not permissions.is_add_allowed:
@@ -207,12 +206,12 @@ def addEntryView(request, pk=None):
 	
 	if request.method == 'POST':
 		if formset.is_valid():
-			entry = formset.save(commit=False)
+			new_entry = formset.save(commit=False)
 			if editing:
-				if entry.room.id != old_room.id:
-					log = LogEntry(entry=entry, old_location=old_room, new_location=entry.room, user=request.user)
+				log = logEntryChange(entry, new_entry, request.user)
+				if log:
 					log.save()
-			entry.save()
+			new_entry.save()
 			return HttpResponseRedirect(reverse('main'))
 	
 	return render(request, 'addEntry.html', { 'formset' : formset.as_p() })
@@ -472,13 +471,12 @@ def apiEntry(request, pk=None):
 		serializer = EntrySerializer(entry, many=False)
 		return JSONResponse(serializer.data)
 	elif request.method == 'PUT':
-		old_room = entry.room
 		data = JSONParser().parse(request)
 		serializer = EntrySerializerShallow(entry, data=data, partial=True)
 		if serializer.is_valid():
-			entry = serializer.save()
-			if old_room.id != entry.room.id:
-				log = LogEntry(entry=entry, old_location=old_room, new_location=entry.room, user=request.user)
+			new_entry = serializer.save()
+			log = logEntryChange(entry, new_entry, request.user)
+			if log:
 				log.save()
 		return JSONResponse(serializer.data)
 	else:

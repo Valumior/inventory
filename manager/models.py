@@ -91,8 +91,9 @@ class Entry(models.Model):
 class LogEntry(models.Model):
 	entry = models.ForeignKey(Entry, blank=False)
 	log_date = models.DateTimeField(auto_now_add=True)
-	old_location = models.ForeignKey(Room, blank=False, related_name='old_location')
-	new_location = models.ForeignKey(Room, blank=False, related_name='new_location')
+	old_location = models.ForeignKey(Room, null=True, related_name='old_location')
+	new_location = models.ForeignKey(Room, null=True, related_name='new_location')
+	notes = models.TextField(max_length=200, null=True, blank=True)
 	user = models.ForeignKey(User, blank=False, related_name='change_author')
 
 class InventoryOrder(models.Model):
