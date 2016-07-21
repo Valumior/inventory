@@ -28,5 +28,5 @@ def logEntryChange(old_entry, new_entry, user):
 		change = True
 		changelog = changelog + 'Zmiana opiekuna\n'
 	if change:
-		return LogEntry(entry=new_entry, old_location=old_entry.room, new_location=room, author=user, notes=changelog)
+		return LogEntry(entry=new_entry, old_location=old_entry.room, new_location=room, user=user, notes=changelog)
 	return None

@@ -89,12 +89,12 @@ class Entry(models.Model):
 		return URLify_entry_signing(self.signing)
 
 class LogEntry(models.Model):
-	entry = models.ForeignKey(Entry, blank=False)
-	log_date = models.DateTimeField(auto_now_add=True)
-	old_location = models.ForeignKey(Room, null=True, related_name='old_location')
-	new_location = models.ForeignKey(Room, null=True, related_name='new_location')
-	notes = models.TextField(max_length=200, null=True, blank=True)
-	user = models.ForeignKey(User, blank=False, related_name='change_author')
+	entry = models.ForeignKey(Entry, blank=False, verbose_name='Wpis')
+	log_date = models.DateTimeField(auto_now_add=True, verbose_name='Data')
+	old_location = models.ForeignKey(Room, null=True, related_name='old_location', verbose_name='Stara lokalizacja')
+	new_location = models.ForeignKey(Room, null=True, related_name='new_location', verbose_name='Nowa lokalizacja')
+	notes = models.TextField(max_length=200, null=True, blank=True, verbose_name='Opis zmiany')
+	user = models.ForeignKey(User, blank=False, related_name='change_author', verbose_name='Autor')
 
 class InventoryOrder(models.Model):
 	date_ordered = models.DateTimeField(auto_now_add=True)

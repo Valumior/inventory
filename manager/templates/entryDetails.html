@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
 	<h1>{{ entry.signing }}</h1>
@@ -16,20 +17,5 @@
 	<h3>Kod QR:</h3>
 	<img src="{{ image }}"/>
 	<h2>Historia</h2>
-	<table class="table table-bordered table-condensed">
-		<tr>
-			<th>Data</th>
-			<th>Stara Lokalizacja</th>
-			<th>Nowa Lokalizacja</th>
-			<th>Uzytkownik</th>
-		</tr>
-		{% for log in logs %}
-			<tr>
-				<td>{{ log.log_date }}</td>
-				<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=log.old_location.id %}">{{ log.old_location }}</a></td>
-				<td><a class="btn btn-primary btn-block" href="{% url 'roomDetails' pk=log.new_location.id %}">{{ log.new_location }}</a></td>
-				<td>{{ log.user.username }}</td>
-			</tr>
-		{% endfor %}
-	</table>
+	{% render_table logs %}
 {% endblock %}

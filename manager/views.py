@@ -242,7 +242,8 @@ def generateQrImage(request, pk=None):
 def entryDetailsView(request, pk=None):
 	if pk:
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
-		logs = LogEntry.objects.filter(entry=entry)
+		logs = LogEntryTable(LogEntry.objects.filter(entry=entry))
+		RequestConfig(request).configure(logs)
 		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk })})
 	return HttpResponseRedirect(reverse('main'))
 
