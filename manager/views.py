@@ -186,6 +186,7 @@ def addEntryView(request, pk=None):
 				raise PermissionDenied
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		editing = True
+		old_entry = entry.getDict()
 	else:
 		if not permissions.is_admin:
 			if not permissions.is_add_allowed:
@@ -206,12 +207,12 @@ def addEntryView(request, pk=None):
 	
 	if request.method == 'POST':
 		if formset.is_valid():
-			new_entry = formset.save(commit=False)
+			entry = formset.save(commit=False)
 			if editing:
-				log = logEntryChange(entry, new_entry, request.user)
+				log = logEntryChange(old_entry, entry, request.user)
 				if log:
 					log.save()
-			new_entry.save()
+			entry.save()
 			return HttpResponseRedirect(reverse('main'))
 	
 	return render(request, 'addEntry.html', { 'formset' : formset.as_p() })
@@ -472,11 +473,12 @@ def apiEntry(request, pk=None):
 		serializer = EntrySerializer(entry, many=False)
 		return JSONResponse(serializer.data)
 	elif request.method == 'PUT':
+		old_entry = entry.getDict()
 		data = JSONParser().parse(request)
 		serializer = EntrySerializerShallow(entry, data=data, partial=True)
 		if serializer.is_valid():
-			new_entry = serializer.save()
-			log = logEntryChange(entry, new_entry, request.user)
+			entry = serializer.save()
+			log = logEntryChange(old_entry, entry, request.user)
 			if log:
 				log.save()
 		return JSONResponse(serializer.data)

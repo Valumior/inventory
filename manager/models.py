@@ -87,6 +87,9 @@ class Entry(models.Model):
 		
 	def getURL(self):
 		return URLify_entry_signing(self.signing)
+		
+	def getDict(self):
+		return { 'signing' : self.signing , 'name' : self.name , 'room' : self.room , 'short_description' : self.short_description , 'description' : description , 'caretaker' : self.caretaker }
 
 class LogEntry(models.Model):
 	entry = models.ForeignKey(Entry, blank=False, verbose_name='Wpis')
