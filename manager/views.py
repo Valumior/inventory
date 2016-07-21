@@ -399,10 +399,9 @@ def inventoryReportDetailsView(request, pk=None):
 def generateInventoryOrderReport(request, pk=None):
 	order = get_object_or_404(InventoryOrder, pk=pk)
 	reports = InventoryRoomReport.filter(order=order)
-	entries = InventoryEntryNote.filter(report__in=reports)
-	present_entries = entries.filter(status='P')
-	misplaced_entries = entries.filter(status='E').exclude(entry__in=present_entries.value('entry'))
-	missing_entries = entries.filter(status='M').exclude(entry__in=misplaced_entries.value('entry'))
+	present_entries = InventoryEntryNote.filter(report__in=reports).filter(status='P')
+	misplaced_entries = InventoryEntryNote.filter(report__in=reports).filter(status='E').exclude(entry__in=present_entries.value('entry'))
+	missing_entries = InventoryEntryNote.filter(report__in=reports).filter(status='M').exclude(entry__in=misplaced_entries.value('entry'))
 	return render_to_pdf_response(request, 'inventoryOrderReportPdf.html', { 'present_entries' : present_entries , 'misplaced_entries' : misplaced_entries , 'missing_entries' : missing_entries })
 
 @login_required(login_url='login')
