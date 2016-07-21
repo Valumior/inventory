@@ -21,6 +21,7 @@ from manager.util import deURLify_entry_signing
 
 import StringIO
 import qrcode
+from datetime import datetime
 
 # Create your views here.
 
@@ -415,7 +416,8 @@ def finishInventoryOrder(request, pk=None):
 	if Room.objects.exclude(id__in=done_rooms).exists():
 		raise PermissionDenied
 	order.completed = True
-	order.date_completed = datetime.datetime.now()
+	order.date_completed = datetime.now()
+	order.save()
 	return HttpResponseRedirect(reverse('inventoryOrderReports', kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
