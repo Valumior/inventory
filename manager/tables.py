@@ -18,6 +18,7 @@ class AddressTable(tables.Table):
 class AddressTableNoEdit(AddressTable):
 	class Meta:
 		exclude = ('edit',)
+		attrs = table_attrs
 
 class EntryTable(tables.Table):
 	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('getURL') }, attrs=button_attrs)
@@ -25,7 +26,7 @@ class EntryTable(tables.Table):
 	
 	class Meta:
 		model = Entry
-		fields = ('signing', 'name', 'date_added', 'added_price', 'date_removed', 'removed_price', 'room', 'short_description', 'last_modified')
+		fields = ('signing', 'name', 'date_added', 'added_value', 'date_removed', 'removed_value', 'room', 'short_description', 'last_modified')
 		attrs = table_attrs
 
 class LogEntryTable(tables.Table):
@@ -49,6 +50,7 @@ class RoomTable(tables.Table):
 class RoomTableNoEdit(RoomTable):
 	class Meta:
 		exclude = ('edit',)
+		attrs = table_attrs
 
 class UserPermissionsTable(tables.Table):
 	user = tables.LinkColumn('userDetails', kwargs={ 'pk' : A('user.id') }, attrs=button_attrs)
