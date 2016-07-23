@@ -1,0 +1,28 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block extra_style %}
+	<style type="text/css">
+		h1, h2 { text-align: center }
+		
+		.text-right { text-align: right }
+		
+	</style>
+{% endblock %}
+
+{% block content %}
+<h1>Wniosek o likwidacje</h1>
+<table>
+	<tr>
+		<th>Oznakowanie</th>
+		<th>Nazwa</th>
+		<th>Uwagi</th>
+	</tr>
+	{% for note in liquidation_notes %}
+		<tr>
+			<td>{{ note.entry.signing }}</td>
+			<td>{{ note.entry.name }}</td>
+			<td>{{ note.note }}</td>
+		</tr>
+	{% endfor %}
+</table>
+{% endblock %}

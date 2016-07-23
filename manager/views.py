@@ -472,7 +472,7 @@ def liquidationView(request):
 	pending_liquidations = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)
 	completed_liquidations = Liquidation.objects.filter(completed=True)
 	rejected_liquidations = Liquidation.objects.filter(rejected=True)
-	return render(request, 'liquidation.html' { 'permissions' : premisssions, 'incomplete_liquidations' : incomplete_liquidations , 'pending_liquidations' : pending_liquidations , 'completed_liquidations' : completed_liquidations , 'rejected_liquidations' : rejected_liquidations })
+	return render(request, 'liquidation.html', { 'permissions' : premisssions, 'incomplete_liquidations' : incomplete_liquidations , 'pending_liquidations' : pending_liquidations , 'completed_liquidations' : completed_liquidations , 'rejected_liquidations' : rejected_liquidations })
 
 @login_required(login_url='login')
 def createLiquidation(request):
@@ -489,7 +489,7 @@ def liquidationDetailsView(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	liquidation_notes = LiquidationEntryNoteTable(LiquidationEntryNote.objects.filter(liquidation=liquidation))
 	RequestConfig(request).configure(liquidation_notes)
-	return render(request, 'liquidationDetails.html', { 'permissions' : premissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes }
+	return render(request, 'liquidationDetails.html', { 'permissions' : premissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
 
 @login_required(login_url='login')
 def submitLiquidation(request, pk=None):
