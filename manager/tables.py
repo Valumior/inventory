@@ -83,3 +83,12 @@ class InventoryEntryNoteTable(tables.Table):
 		model = InventoryEntryNote
 		fields = ('entry', 'status')
 		attrs = table_attrs
+
+class LiquidationEntryNoteTable(tables.Table):
+	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.getURL') }, attrs=button_attrs)
+	name = tables.Column(accessor=A('entry.name'), attrs=button_attrs)
+	
+	class Meta:
+		model = LiquidationEntryNote
+		fields = ('entry', 'name', 'note')
+		attrs = table_attrs

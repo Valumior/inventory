@@ -9,11 +9,13 @@ import string, random
 class UserPermissions(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
 	is_admin = models.BooleanField(default=False, verbose_name='Administrator')
-	is_session_controller = models.BooleanField(default=False, verbose_name='Kontroler sesji')
+	is_session_controller = models.BooleanField(default=False, verbose_name='Kontroler sesji inwentaryzayjnych')
 	is_edit_allowed = models.BooleanField(default=False, verbose_name='Edycja wpisow')
 	is_add_allowed = models.BooleanField(default=False, verbose_name='Dodawanie wpisow')
 	is_user_manager = models.BooleanField(default=False, verbose_name='Zarzadzanie uzytkownikami')
 	is_inventory = models.BooleanField(default=False, verbose_name='Inwentaryzacja')
+	is_liquidation = models.BooleanField(default=False, verbose_name='Wnioskowanie likwidacji')
+	is_liquidation_approver = models.BooleanField(default=False, verbose_name='Zatwierdzanie likwidacji')
 	
 class Address(models.Model):
 	city = models.CharField(max_length=100, blank=False, verbose_name='Miasto')
@@ -124,3 +126,16 @@ class InventoryEntryNote(models.Model):
 	entry = models.ForeignKey(Entry, verbose_name='Przedmiot')
 	status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name='Status')
 	report = models.ForeignKey(InventoryRoomReport)
+
+class Liquidation(models.Model):
+	date_issued = models.DateTimeField(auto_now_add=True)
+	submitted = models.BooleanField(default=False)
+	completed = models.BooleanField(default=False)
+	rejected = models.BooleanField(default=False)
+	date_closed = models.DateTimeField(null=True)
+	entries = models.ManyToManyField(Entry, through='LiquidationEntryNote')
+	
+class LiquidationEntryNote(models.Model):
+	liquidation = models.ForeignKey(Liquidation)
+	entry = models.ForeignKey(Entry, verbose_name='Przedmiot')
+	note = models.TextField(max_length=300, verbose_name='Uwagi')

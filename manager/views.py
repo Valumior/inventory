@@ -464,7 +464,73 @@ def addInstitutionView(request):
 			formset.save()
 			return HttpResponseRedirect(reverse('institution'))
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Instytucje', 'form_url' : 'addInstitution'})
+
+@login_required(login_url='login')
+def liquidationView(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	incomplete_liquidations = Liquidation.objects.filter(submitted=False)
+	pending_liquidations = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)
+	completed_liquidations = Liquidation.objects.filter(completed=True)
+	rejected_liquidations = Liquidation.objects.filter(rejected=True)
+	return render(request, 'liquidation.html' { 'permissions' : premisssions, 'incomplete_liquidations' : incomplete_liquidations , 'pending_liquidations' : pending_liquidations , 'completed_liquidations' : completed_liquidations , 'rejected_liquidations' : rejected_liquidations })
+
+@login_required(login_url='login')
+def createLiquidation(request):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation:
+			raise PermissionDenied
+	Liquidation().save()
+	return HttpResponseRedirect(reverse('liquidation'))
+
+@login_required(login_url='login')
+def liquidationDetailsView(request, pk=None):
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	liquidation_notes = LiquidationEntryNoteTable(LiquidationEntryNote.objects.filter(liquidation=liquidation))
+	RequestConfig(request).configure(liquidation_notes)
+	return render(request, 'liquidationDetails.html', { 'permissions' : premissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes }
+
+@login_required(login_url='login')
+def submitLiquidation(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation:
+			raise PermissionDenied
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	liquidation.submitted = True
+	liquidation.save()
+	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
+
+@login_required(login_url='login')
+def completeLiquidation(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation_approver:
+			raise PermissionDenied
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	liquidation.completed = True
+	liquidation.save()
+	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
+
+@login_required(login_url='login')
+def rejectLiquidation(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation_approver:
+			raise PermissionDenied
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	liquidation.rejected = True
+	liquidation.save()
+	#TODO update entries
+	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
 	
+@login_required(login_url='login')
+def generateLiquidationApplication(request, pk=None):
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	liquidation_notes = LiquidationEntryNote.objects.filter(liquidation=liquidation)
+	return render_to_pdf_response(request, 'liquidationApplicationPdf.html', { 'liquidation_notes' : liquidation_notes })
+
 @api_view(['GET'])
 def apiEntries(request):
 	if request.method == 'GET':
