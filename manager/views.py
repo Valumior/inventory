@@ -531,6 +531,26 @@ def generateLiquidationApplication(request, pk=None):
 	liquidation_notes = LiquidationEntryNote.objects.filter(liquidation=liquidation)
 	return render_to_pdf_response(request, 'liquidationApplicationPdf.html', { 'liquidation_notes' : liquidation_notes })
 
+@login_required(login_url='login')
+def liquidateEntryView(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation_approver:
+			raise PermissionDenied
+	if not Liquidation.objects.filter(submitted=True, completed=False, rejected=False).exists():
+		raise Http404
+	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
+	formset = LiquidationEntryNoteForm(request.POST or None)
+	if request.method == 'POST':
+		if formset.is_valid():
+			liquidation_note = formset.save(commit=False)
+			liquidation_note.entry = entry
+			liquidation_note.save()
+	else:
+		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)	
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : 'liquidateEntry'})
+
+
 @api_view(['GET'])
 def apiEntries(request):
 	if request.method == 'GET':

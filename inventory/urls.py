@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^entry/(?P<pk>[a-zA-Z0-9_\-.,]+)/$', ManagerViews.entryDetailsView, name='entryDetails'),
     url(r'^entry/(?P<pk>[a-zA-Z0-9_\-.,]+)/edit/$', ManagerViews.addEntryView, name='editEntry'),
     url(r'^entry/(?P<pk>[a-zA-Z0-9_\-.,]+)/qrgen/$', ManagerViews.generateQrImage, name='generateQr'),
+    url(r'^entry/(?P<pk>[a-zA-Z0-9_\-.,]+)/liquidate/$', ManagerViews.liquidateEntryView, name='liquidateEntry'),
     url(r'^address/$', ManagerViews.addressView, name='address'),
     url(r'^address/(?P<pk>\d+)/$', ManagerViews.addressDetailView, name='addressDetails'),
     url(r'^address/add/$', ManagerViews.addAddressView, name='addAddress'),

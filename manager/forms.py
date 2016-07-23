@@ -49,6 +49,11 @@ class EntryFormSimple(ModelForm):
 		model = Entry
 		fields = ('room', 'short_description','description')
 
+class LiquidationEntryNoteForm(ModelForm):
+	class Meta:
+		model = LiquidationEntryNote
+		fields = ('liquidation', 'note')
+
 class UserForm(ModelForm):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 	
