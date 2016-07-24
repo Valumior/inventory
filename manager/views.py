@@ -270,8 +270,10 @@ def entryDetailsView(request, pk=None):
 	if pk:
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		logs = LogEntryTable(LogEntry.objects.filter(entry=entry))
+		liquidation = LiquidationEntryNote.objects.filter(entry=entry, liquidation__completed=False, liquidation__rejected=False).first().values('liquidation')
+		can_liquidate = Liquidation.objects.filter(submitted=False).exists()
 		RequestConfig(request).configure(logs)
-		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk })})
+		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk }), 'liquidation' : liquidation , 'can_liquidate' : can_liquidate })
 	return HttpResponseRedirect(reverse('main'))
 
 @login_required(login_url='login')
@@ -549,7 +551,6 @@ def liquidateEntryView(request, pk=None):
 	else:
 		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)	
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : 'liquidateEntry'})
-
 
 @api_view(['GET'])
 def apiEntries(request):

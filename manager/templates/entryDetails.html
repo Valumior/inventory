@@ -13,7 +13,17 @@
 	<h4>Ostatnia modyfikacja - {{ entry.last_modified }}</h4>
 	<h3>Opis:</h3>
 	<p>{{ entry.description }}</p>
-	<a class="btn btn-default" href="{% url 'editEntry' pk=entry.getURL %}">Edytuj</a>
+	{% if permissions.is_edit_allowed %}
+		<a class="btn btn-default" href="{% url 'editEntry' pk=entry.getURL %}">Edytuj</a>
+	{% endif %}
+	{% if liquidation %}
+		<h4>Wniosek o likwidacje</h4>
+		<a href="{% url 'liquidationDetails' pk=liquidation.id %}">{{ liquidation }}</a>
+	{% else %}
+		{% if permission.is_liquidation can_liquidate %}
+			<a href="{% url 'liquidateEntry' pk=entry.signing %}">Dodaj do wniosku o likwidacje</a>
+		{% endif %}
+	{% endif %}
 	<h3>Kod QR:</h3>
 	<img src="{{ image }}"/>
 	<h2>Historia</h2>
