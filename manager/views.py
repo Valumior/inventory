@@ -491,7 +491,7 @@ def liquidationDetailsView(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	liquidation_notes = LiquidationEntryNoteTable(LiquidationEntryNote.objects.filter(liquidation=liquidation))
 	RequestConfig(request).configure(liquidation_notes)
-	return render(request, 'liquidationDetails.html', { 'permissions' : premissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
+	return render(request, 'liquidationDetails.html', { 'permissions' : permissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
 
 @login_required(login_url='login')
 def submitLiquidation(request, pk=None):
