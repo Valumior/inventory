@@ -474,7 +474,7 @@ def liquidationView(request):
 	pending_liquidations = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)
 	completed_liquidations = Liquidation.objects.filter(completed=True)
 	rejected_liquidations = Liquidation.objects.filter(rejected=True)
-	return render(request, 'liquidation.html', { 'permissions' : premissions, 'incomplete_liquidations' : incomplete_liquidations , 'pending_liquidations' : pending_liquidations , 'completed_liquidations' : completed_liquidations , 'rejected_liquidations' : rejected_liquidations })
+	return render(request, 'liquidation.html', { 'permissions' : permissions, 'incomplete_liquidations' : incomplete_liquidations , 'pending_liquidations' : pending_liquidations , 'completed_liquidations' : completed_liquidations , 'rejected_liquidations' : rejected_liquidations })
 
 @login_required(login_url='login')
 def createLiquidation(request):
