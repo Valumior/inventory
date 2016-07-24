@@ -269,6 +269,7 @@ def generateQrImage(request, pk=None):
 def entryDetailsView(request, pk=None):
 	if pk:
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
+		permissions = get_object_or_404(UserPermissions, user=request.user)
 		logs = LogEntryTable(LogEntry.objects.filter(entry=entry))
 		if LiquidationEntryNote.objects.filter(entry=entry, liquidation__completed=False, liquidation__rejected=False).exists():
 			liquidation = LiquidationEntryNote.objects.get(entry=entry, liquidation__completed=False, liquidation__rejected=False).liquidation
@@ -276,7 +277,7 @@ def entryDetailsView(request, pk=None):
 			liquidation = None
 		can_liquidate = Liquidation.objects.filter(submitted=False).exists()
 		RequestConfig(request).configure(logs)
-		return render(request, 'entryDetails.html', { 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk }), 'liquidation' : liquidation , 'can_liquidate' : can_liquidate })
+		return render(request, 'entryDetails.html', { 'permissions' : permissions , 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk }), 'liquidation' : liquidation , 'can_liquidate' : can_liquidate })
 	return HttpResponseRedirect(reverse('main'))
 
 @login_required(login_url='login')
