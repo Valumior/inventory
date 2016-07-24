@@ -20,7 +20,7 @@
 		<h4>Wniosek o likwidacje</h4>
 		<a href="{% url 'liquidationDetails' pk=liquidation.id %}">{{ liquidation }}</a>
 	{% else %}
-		{% if permission.is_liquidation can_liquidate %}
+		{% if permission.is_liquidation and can_liquidate %}
 			<a href="{% url 'liquidateEntry' pk=entry.signing %}">Dodaj do wniosku o likwidacje</a>
 		{% endif %}
 	{% endif %}
