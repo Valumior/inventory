@@ -447,7 +447,7 @@ def addEntryGroupView(request):
 		if formset.is_valid():
 			formset.save()
 			return HttpResponseRedirect(reverse('entryGroup'))
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Grupe', 'form_url' : 'addEntryGroup'})
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Grupe', 'form_url' : reverse('addEntryGroup')})
 
 @login_required(login_url='login')
 def institutionView(request):
@@ -465,7 +465,7 @@ def addInstitutionView(request):
 		if formset.is_valid():
 			formset.save()
 			return HttpResponseRedirect(reverse('institution'))
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Instytucje', 'form_url' : 'addInstitution'})
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj Instytucje', 'form_url' : reverse('addInstitution')})
 
 @login_required(login_url='login')
 def liquidationView(request):
@@ -550,7 +550,34 @@ def liquidateEntryView(request, pk=None):
 			liquidation_note.save()
 	else:
 		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)	
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : 'liquidateEntry'})
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : reverse('liquidateEntry')})
+
+
+@login_required(login_url='login')
+def liquidationNoteEdit(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation:
+			raise PermissionDenied
+	liquidation_note = get_object_or_404(LiquidationEntryNote, pk=pk)
+	formset = LiquidationEntryNoteEditForm(request.POST or None, instance=liquidation_note)
+	if request.method == 'POST':
+		if formset.is_valid():
+			liquidation_note = formset.save()
+			HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation_note.liquidation.id }))
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj powod likwidacji' % (entry.signing) , 'form_url' : reverse('liquidationNoteEdit', kwargs={ 'pk' : pk })})
+
+@login_required(login_url='login')
+def liquidationNoteRemove(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation:
+			raise PermissionDenied
+	liquidation_note = get_object_or_404(LiquidationEntryNote, pk=pk)
+	liquidation = liquidation_note.liquidation
+	liquidation_note.delete()
+	HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
+	
 
 @api_view(['GET'])
 def apiEntries(request):

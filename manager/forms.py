@@ -54,6 +54,11 @@ class LiquidationEntryNoteForm(ModelForm):
 		model = LiquidationEntryNote
 		fields = ('liquidation', 'note')
 
+class LiquidationEntryNoteEditForm(ModelForm):
+	class Meta:
+		model = LiquidationEntryNote
+		fields = ('note',)
+
 class UserForm(ModelForm):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 	
