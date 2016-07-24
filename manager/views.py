@@ -543,7 +543,7 @@ def liquidateEntryView(request, pk=None):
 	if not permissions.is_admin:
 		if not permissions.is_liquidation_approver:
 			raise PermissionDenied
-	if not Liquidation.objects.filter(submitted=True, completed=False, rejected=False).exists():
+	if not Liquidation.objects.filter(submitted=False).exists():
 		raise Http404
 	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 	formset = LiquidationEntryNoteForm(request.POST or None)
