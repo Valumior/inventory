@@ -553,8 +553,8 @@ def liquidateEntryView(request, pk=None):
 			liquidation_note.entry = entry
 			liquidation_note.save()
 	else:
-		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=True, completed=False, rejected=False)	
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : reverse('liquidateEntry')})
+		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=False)	
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : reverse('liquidateEntry', kwargs={ 'pk' : pk })})
 
 
 @login_required(login_url='login')
