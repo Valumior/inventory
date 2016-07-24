@@ -3,14 +3,14 @@
 
 {% block content %}
 	<h1>Wniosek o likwidacje {{ liquidation }}</h1>
-	{% if permission.is_liquidation %}
+	{% if permissions.is_liquidation %}
 		{% if liquidation.submitted %}
 			<a class="btn btn-default" href="{% url 'generateLiquidationApplication' pk=liquidation.id %}">Pobierz wniosek</a>
 		{% else %}
 			<a class="btn btn-default" href="{% url 'submitLiquidation' pk=liquidation.id %}">Zatwierdz wniosek</a>
 		{% endif %}
 	{% endif %}
-	{% if permission.is_liquidation_approver and liquidation.submitted %}
+	{% if permissions.is_liquidation_approver and liquidation.submitted %}
 		{% if not liquidation.rejected and not liquidation.completed %}
 			<a class="btn btn-default" href="{% url 'rejectLiquidation' pk=liquidation.id %}">Odrzuc likwidacje</a>
 			<a class="btn btn-default" href="{% url 'completeLiquidation' pk=liquidation.id %}">Potwierdz wykonanie likwidacji</a>
