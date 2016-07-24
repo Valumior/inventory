@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h2>{{ form_title }}</h2>
-	<form enctype="multipart/form-data" method="post" url="{{ url form_url }}">
+	<form enctype="multipart/form-data" method="post" url="{{ form_url }}">
 		{% csrf_token %}
 		{{ formset.as_p }}
 		<button type="submit">Zapisz</button>
