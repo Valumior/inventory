@@ -11,6 +11,7 @@
 		<p>{{ entry.removed_description }}</p>
 	{% endif %}
 	<h4>Ostatnia modyfikacja - {{ entry.last_modified }}</h4>
+	<h3>Pomieszczenie - <a href="{% url 'roomDetials' pk=entry.room.id %}">{{ entry.room }}</a></h3>
 	<h3>Opis:</h3>
 	<p>{{ entry.description }}</p>
 	{% if permissions.is_edit_allowed %}
