@@ -3,7 +3,7 @@
 {% block content %}
 	<h1>Wnioski o likwidacje</h1>
 	{% if permissions.is_liquidation %}
-		<a class="btn btn-default" href="{% url 'createLiquidation' %}"></a>
+		<a class="btn btn-default" href="{% url 'createLiquidation' %}">Stworz nowy wniosek</a>
 	{% endif %}
 	{% if incomplete_liquidations %}
 		<h2>Niekompletne</h2>

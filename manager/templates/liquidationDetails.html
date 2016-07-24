@@ -12,8 +12,8 @@
 	{% endif %}
 	{% if permission.is_liquidation_approver and liquidation.submitted %}
 		{% if not liquidation.rejected and not liquidation.completed %}
-			<a class="btn btn-default" href="{% url 'rejectLiquidation pk=liquidation.id %}">Odrzuc likwidacje</a>
-			<a class="btn btn-default" href="{% url 'completeLiquidation pk=liquidation.id %}">Potwierdz wykonanie likwidacji</a>
+			<a class="btn btn-default" href="{% url 'rejectLiquidation' pk=liquidation.id %}">Odrzuc likwidacje</a>
+			<a class="btn btn-default" href="{% url 'completeLiquidation' pk=liquidation.id %}">Potwierdz wykonanie likwidacji</a>
 		{% endif %}
 	{% endif %}
 	<h2>Srodki trwale do likwidacji</h2>
