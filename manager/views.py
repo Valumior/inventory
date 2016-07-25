@@ -423,7 +423,7 @@ def finishInventoryOrder(request, pk=None):
 		raise PermissionDenied
 	order.completed = True
 	order.date_completed = datetime.now()
-	order.save
+	order.save()
 	return HttpResponseRedirect(reverse('inventoryOrderReports', kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
