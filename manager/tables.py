@@ -23,7 +23,7 @@ class AddressTableNoEdit(AddressTable):
 class EntryTable(tables.Table):
 	signing = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('getURL') }, attrs=button_attrs)
 	room = tables.LinkColumn('roomDetails', kwargs={ 'pk' : A('room.id') }, attrs=button_attrs)
-	select = tables.CheckBoxColumn()
+	select = tables.CheckBoxColumn(accessor='signing', orderable=False)
 	
 	class Meta:
 		model = Entry

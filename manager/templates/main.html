@@ -14,6 +14,7 @@
 		<button class="btn btn-default" type="submit" >Szukaj</button>
 	</form>
 	<form method="post" action="{% url 'main' %}">
+		{% csrf_token %}
 		<div>
 			<button class="btn btn-default" type="submit" name="_liquidate">Likwiduj zaznaczone</button>
 		</div>
