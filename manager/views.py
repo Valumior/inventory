@@ -111,9 +111,18 @@ def mainView(request):
 	search = SearchForm(request.POST or None)
 	data = Entry.objects.all()
 	if request.POST:
-		if search.is_valid():
-			searchString = search.cleaned_data['search']
-			data = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
+		if '_liquidate' in request.POST:
+			mass_liquidation = MassSelectForm(request.POST)
+			if mass_liquidation.is_valid():
+				liquidation = Liquidation()
+				selected_entries = mass_liquidation.cleaned_data['selected']
+				for entry in selected_entries:
+					liqudation.entries.add(entry)
+				liquidation.save()
+		else:
+			if search.is_valid():
+				searchString = search.cleaned_data['search']
+				data = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
 	entries = EntryTable(data)
 	RequestConfig(request).configure(entries)
 	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
@@ -517,11 +526,11 @@ def completeLiquidation(request, pk=None):
 			raise PermissionDenied
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation.completed = True
-	liquidation.save()
 	for entry in liquidation.entries:
 		entry.removed_value = 0.0
 		entry.removed_description = liquidation.getMsg()
 		entry.save()
+	liquidation.save()
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')

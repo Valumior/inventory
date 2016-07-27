@@ -73,3 +73,6 @@ class LoginForm(forms.Form):
 	
 class SearchForm(forms.Form):
 	search = forms.CharField(label='Search')
+
+class MassSelectForm(forms.Form):
+	selected = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple())

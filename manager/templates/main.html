@@ -13,7 +13,10 @@
 		</div>
 		<button class="btn btn-default" type="submit" >Szukaj</button>
 	</form>
-	
-	{% render_table entries %}
-
+	<form method="post" action="{% url 'main' %}">
+		<div>
+			<button class="btn btn-default" type="submit" name="_liquidate">Likwiduj zaznaczone</button>
+		</div>
+		{% render_table entries %}
+	</form>
 {% endblock %}
