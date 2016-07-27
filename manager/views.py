@@ -120,6 +120,7 @@ def mainView(request):
 					liqudation.entries.add(entry)
 				liquidation.save()
 				return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : liquidation.id }))
+			search = SearchForm()
 		else:
 			search = SearchForm(request.POST)
 			if search.is_valid():
