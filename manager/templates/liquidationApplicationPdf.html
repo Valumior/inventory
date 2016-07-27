@@ -15,13 +15,15 @@
 	<tr>
 		<th>Oznakowanie</th>
 		<th>Nazwa</th>
-		<th>Uwagi</th>
+		<th>Data dodania</th>
+		<th>Wartosc poczatkowa</th>
 	</tr>
-	{% for note in liquidation_notes %}
+	{% for entry in entries %}
 		<tr>
-			<td>{{ note.entry.signing }}</td>
-			<td>{{ note.entry.name }}</td>
-			<td>{{ note.note }}</td>
+			<td>{{ entry.signing }}</td>
+			<td>{{ entry.name }}</td>
+			<td>{{ entry.added_date }}</td>
+			<td>{{ entry.added_value }}</td>
 		</tr>
 	{% endfor %}
 </table>
