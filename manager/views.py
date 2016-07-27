@@ -118,14 +118,16 @@ def mainView(request):
 				for entry in selected_entries:
 					liqudation.entries.add(entry)
 				liquidation.save()
+				return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : }))
 		else:
 			search = SearchForm(request.POST)
 			if search.is_valid():
 				searchString = search.cleaned_data['search']
 				data = Entry.objects.filter(Q(signing__icontains=searchString) | Q(name__icontains=searchString) | Q(description__icontains=searchString))
+	else:
+		search = SearchForm()
 	entries = EntryTable(data)
 	RequestConfig(request).configure(entries)
-	search = SearchForm()
 	return render(request, 'main.html', { 'entries' : entries , 'search' : search})
 
 @login_required(login_url='login')
