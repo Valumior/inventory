@@ -75,4 +75,4 @@ class SearchForm(forms.Form):
 	search = forms.CharField(label='Search')
 
 class MassSelectForm(forms.Form):
-	selected = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(), queryset=Entry.objects.all())
+	selected = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(), choices=Entry.objects.all())
