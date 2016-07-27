@@ -109,6 +109,7 @@ def registrationView(request):
 @login_required(login_url='login')
 def mainView(request):
 	data = Entry.objects.all()
+	search = None
 	if request.POST:
 		if '_liquidate' in request.POST:
 			mass_liquidation = MassSelectForm(request.POST)
