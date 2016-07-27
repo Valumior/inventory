@@ -550,7 +550,7 @@ def rejectLiquidation(request, pk=None):
 @login_required(login_url='login')
 def generateLiquidationApplication(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
-	entries = liquidation.entires.all()
+	entries = liquidation.entries.all()
 	return render_to_pdf_response(request, 'liquidationApplicationPdf.html', { 'entries' : entries })
 
 @login_required(login_url='login')
