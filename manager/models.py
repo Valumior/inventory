@@ -128,14 +128,18 @@ class InventoryEntryNote(models.Model):
 	report = models.ForeignKey(InventoryRoomReport)
 
 class Liquidation(models.Model):
-	date_issued = models.DateTimeField(auto_now_add=True)
-	submitted = models.BooleanField(default=False)
-	completed = models.BooleanField(default=False)
-	rejected = models.BooleanField(default=False)
-	date_closed = models.DateTimeField(null=True)
-	entries = models.ManyToManyField(Entry, through='LiquidationEntryNote')
+	LIQUIDATION = 'LT'
+	TRANSFERENCE = 'PT'
+	TYPE_CHOICES = (
+		(LIQUIDATION, 'Likwidacja'),
+		(TRANSFERENCE, 'Przekazanie')
+	)
 	
-class LiquidationEntryNote(models.Model):
-	liquidation = models.ForeignKey(Liquidation)
-	entry = models.ForeignKey(Entry, verbose_name='Przedmiot')
-	note = models.TextField(max_length=300, verbose_name='Uwagi')
+	date_issued = models.DateTimeField(auto_now_add=True, verbose_name='Data utworzenia')
+	submitted = models.BooleanField(default=False, verbose_name='Zlozone')
+	completed = models.BooleanField(default=False, verbose_name='Wykonane')
+	rejected = models.BooleanField(default=False, verbose_name='Odrzucone')
+	date_closed = models.DateTimeField(null=True, verbose_name='Data zamkniecia')
+	document_title = models.CharField(max_length=50, verbose_name='Tytul dokumentu')
+	document_type = models.CharField(max_length=2, choices=TYPE_CHOICES, verbose_name='Typ Dokumentu')
+	entries = models.ManyToManyField(Entry)

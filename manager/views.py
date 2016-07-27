@@ -408,6 +408,7 @@ def generateInventoryOrderReport(request, pk=None):
 	entries = InventoryEntryNote.objects.filter(report__in=reports)
 	present_entries = entries.filter(status='P')
 	misplaced_entries = entries.filter(status='E').exclude(entry__in=present_entries.values('entry'))
+	duplicate_entries = entries.filter(status='E').filter(entry__in=present_entries.values('entry'))
 	missing_entries = entries.filter(status='M').exclude(entry__in=misplaced_entries.values('entry'))
 	return render_to_pdf_response(request, 'inventoryOrderReportPdf.html', { 'present_entries' : present_entries , 'misplaced_entries' : misplaced_entries , 'missing_entries' : missing_entries })
 
@@ -493,7 +494,7 @@ def createLiquidation(request):
 def liquidationDetailsView(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	liquidation_notes = LiquidationEntryNoteTable(LiquidationEntryNote.objects.filter(liquidation=liquidation))
+	liquidation_notes = EntryTable(liquidation.entries)
 	RequestConfig(request).configure(liquidation_notes)
 	return render(request, 'liquidationDetails.html', { 'permissions' : permissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
 
@@ -536,7 +537,7 @@ def generateLiquidationApplication(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation_notes = LiquidationEntryNote.objects.filter(liquidation=liquidation)
 	return render_to_pdf_response(request, 'liquidationApplicationPdf.html', { 'liquidation_notes' : liquidation_notes })
-
+"""
 @login_required(login_url='login')
 def liquidateEntryView(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
@@ -555,33 +556,18 @@ def liquidateEntryView(request, pk=None):
 	else:
 		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=False)	
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : reverse('liquidateEntry', kwargs={ 'pk' : pk })})
-
-
+"""
 @login_required(login_url='login')
-def liquidationNoteEdit(request, pk=None):
+def liquidationEntryRemove(request, lpk=None, epk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	if not permissions.is_admin:
 		if not permissions.is_liquidation:
 			raise PermissionDenied
-	liquidation_note = get_object_or_404(LiquidationEntryNote, pk=pk)
-	formset = LiquidationEntryNoteEditForm(request.POST or None, instance=liquidation_note)
-	if request.method == 'POST':
-		if formset.is_valid():
-			liquidation_note = formset.save()
-			HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation_note.liquidation.id }))
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj powod likwidacji' % (entry.signing) , 'form_url' : reverse('liquidationNoteEdit', kwargs={ 'pk' : pk })})
-
-@login_required(login_url='login')
-def liquidationNoteRemove(request, pk=None):
-	permissions = get_object_or_404(UserPermissions, user=request.user)
-	if not permissions.is_admin:
-		if not permissions.is_liquidation:
-			raise PermissionDenied
-	liquidation_note = get_object_or_404(LiquidationEntryNote, pk=pk)
-	liquidation = liquidation_note.liquidation
-	liquidation_note.delete()
+	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(epk))
+	liquidation = get_object_or_404(Liquidation, pk=lpk)
+	liquidation.entries.remove(entry)
 	HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
-	
+
 
 @api_view(['GET'])
 def apiEntries(request):

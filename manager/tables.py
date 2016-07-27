@@ -83,19 +83,3 @@ class InventoryEntryNoteTable(tables.Table):
 		model = InventoryEntryNote
 		fields = ('entry', 'status')
 		attrs = table_attrs
-
-class LiquidationEntryNoteTable(tables.Table):
-	entry = tables.LinkColumn('entryDetails', kwargs={ 'pk' : A('entry.getURL') }, attrs=button_attrs)
-	name = tables.Column(accessor=A('entry.name'))
-	edit = tables.LinkColumn('liquidationNoteEdit', kwargs={ 'pk' : A('pk') }, text='Edytuj', attrs=button_attrs, orderable=False, verbose_name='Edytuj')
-	remove = tables.LinkColumn('liquidationNoteRemove', kwargs={ 'pk' : A('pk') }, text='Usun', attrs=button_attrs, orderable=False, verbose_name='Usun')
-	
-	class Meta:
-		model = LiquidationEntryNote
-		fields = ('entry', 'name', 'note', 'edit', 'remove')
-		attrs = table_attrs
-
-class LiquidationEntryNoteTableNoInteraction(tables.Table):
-	class Meta:
-		exclude = ('edit', 'remove')
-		attrs = table_attrs
