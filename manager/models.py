@@ -141,5 +141,13 @@ class Liquidation(models.Model):
 	rejected = models.BooleanField(default=False, verbose_name='Odrzucone')
 	date_closed = models.DateTimeField(null=True, verbose_name='Data zamkniecia')
 	document_title = models.CharField(max_length=50, verbose_name='Tytul dokumentu')
-	document_type = models.CharField(max_length=2, choices=TYPE_CHOICES, verbose_name='Typ Dokumentu')
+	document_type = models.CharField(max_length=2, choices=TYPE_CHOICES, blank=False, verbose_name='Typ Dokumentu')
 	entries = models.ManyToManyField(Entry)
+
+	def getMsg(self):
+		if self.document_title:
+			if self.document_type == LIQUIDATION:
+				return 'Likwidacja na podstawie dokumentu ' + self.document_title
+			elif self.document_type == TRANSFERENCE:
+				return 'Przekazanie na podstawie dokumentu ' + self.document_title
+		return ''

@@ -21,8 +21,12 @@
 		<h4>Wniosek o likwidacje</h4>
 		<a href="{% url 'liquidationDetails' pk=liquidation.id %}">{{ liquidation }}</a>
 	{% else %}
-		{% if permissions.is_liquidation and can_liquidate %}
-			<a href="{% url 'liquidateEntry' pk=entry.getURL %}">Dodaj do wniosku o likwidacje</a>
+		{% if permissions.is_liquidation and possible_liquidations %}
+			{% for liq in possible_liquidations %}
+				<div class="list-group">
+					<a class="list-group-item" href="{% url 'liquidateEntry' epk=entry.getURL lpk=liq.id %}">Dodaj do wniosku o likwidacje {{ liq }}</a>
+				</div>
+			{% endfor %}
 		{% endif %}
 	{% endif %}
 	<h3>Kod QR:</h3>

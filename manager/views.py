@@ -275,9 +275,9 @@ def entryDetailsView(request, pk=None):
 			liquidation = LiquidationEntryNote.objects.get(entry=entry, liquidation__completed=False, liquidation__rejected=False).liquidation
 		else:
 			liquidation = None
-		can_liquidate = Liquidation.objects.filter(submitted=False).exists()
+		possible_liquidations = Liquidation.objects.filter(submitted=False)
 		RequestConfig(request).configure(logs)
-		return render(request, 'entryDetails.html', { 'permissions' : permissions , 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk }), 'liquidation' : liquidation , 'can_liquidate' : can_liquidate })
+		return render(request, 'entryDetails.html', { 'permissions' : permissions , 'entry' : entry , 'logs' : logs, 'image' : reverse('generateQr', kwargs={ 'pk' : pk }), 'liquidation' : liquidation , 'possible_liquidations' : possible_liquidations })
 	return HttpResponseRedirect(reverse('main'))
 
 @login_required(login_url='login')
@@ -518,6 +518,10 @@ def completeLiquidation(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation.completed = True
 	liquidation.save()
+	for entry in liquidation.entries:
+		entry.removed_value = 0.0
+		entry.removed_description = liquidation.getMsg()
+		entry.save()
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
 
 @login_required(login_url='login')
@@ -529,7 +533,6 @@ def rejectLiquidation(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation.rejected = True
 	liquidation.save()
-	#TODO update entries
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
 	
 @login_required(login_url='login')
@@ -537,26 +540,20 @@ def generateLiquidationApplication(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation_notes = LiquidationEntryNote.objects.filter(liquidation=liquidation)
 	return render_to_pdf_response(request, 'liquidationApplicationPdf.html', { 'liquidation_notes' : liquidation_notes })
-"""
+
 @login_required(login_url='login')
-def liquidateEntryView(request, pk=None):
+def liquidateEntry(request, epk=None, lpk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	if not permissions.is_admin:
 		if not permissions.is_liquidation_approver:
 			raise PermissionDenied
-	if not Liquidation.objects.filter(submitted=False).exists():
-		raise Http404
-	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
-	formset = LiquidationEntryNoteForm(request.POST or None)
-	if request.method == 'POST':
-		if formset.is_valid():
-			liquidation_note = formset.save(commit=False)
-			liquidation_note.entry = entry
-			liquidation_note.save()
-	else:
-		formset.fields['liquidation'].queryset = Liquidation.objects.filter(submitted=False)	
-	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj %s do likwidacji' % (entry.signing) , 'form_url' : reverse('liquidateEntry', kwargs={ 'pk' : pk })})
-"""
+	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(epk))
+	liquidation = get_object_or_404(Liquidation, pk=lpk)
+	if liquidation.submitted:
+		raise PermissionDenied
+	liquidation.entries.add(entry)
+	return HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
+
 @login_required(login_url='login')
 def liquidationEntryRemove(request, lpk=None, epk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
@@ -566,7 +563,7 @@ def liquidationEntryRemove(request, lpk=None, epk=None):
 	entry = get_object_or_404(Entry, signing=deURLify_entry_signing(epk))
 	liquidation = get_object_or_404(Liquidation, pk=lpk)
 	liquidation.entries.remove(entry)
-	HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
+	return HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
 
 
 @api_view(['GET'])
