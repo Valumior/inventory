@@ -113,13 +113,12 @@ def mainView(request):
 	if request.POST:
 		if '_liquidate' in request.POST:
 			mass_liquidation = MassSelectForm(request.POST)
-			if mass_liquidation.is_valid():
-				liquidation = Liquidation()
-				selected_entries = mass_liquidation.cleaned_data['selected']
-				for entry in selected_entries:
-					liqudation.entries.add(entry)
-				liquidation.save()
-				return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : liquidation.id }))
+			liquidation = Liquidation()
+			selected_entries = mass_liquidation.cleaned_data['selected']
+			for entry in selected_entries:
+				liqudation.entries.add(entry)
+			liquidation.save()
+			return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : liquidation.id }))
 			search = SearchForm()
 		else:
 			search = SearchForm(request.POST)
