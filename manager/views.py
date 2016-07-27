@@ -115,7 +115,7 @@ def mainView(request):
 			liquidation = Liquidation()
 			selected_entries = request.POST.getlist('selected')
 			for entry in selected_entries:
-				liqudation.entries.add(entry)
+				liquidation.entries.add(entry)
 			liquidation.save()
 			return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : liquidation.id }))
 		else:
