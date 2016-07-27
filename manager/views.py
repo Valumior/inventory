@@ -113,6 +113,7 @@ def mainView(request):
 	if request.POST:
 		if '_liquidate' in request.POST:
 			liquidation = Liquidation()
+			liquidation.save()
 			selected_entries = request.POST.getlist('selected')
 			for entry in selected_entries:
 				liquidation.entries.add(entry)
