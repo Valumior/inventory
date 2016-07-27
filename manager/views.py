@@ -283,8 +283,8 @@ def entryDetailsView(request, pk=None):
 		entry = get_object_or_404(Entry, signing=deURLify_entry_signing(pk))
 		permissions = get_object_or_404(UserPermissions, user=request.user)
 		logs = LogEntryTable(LogEntry.objects.filter(entry=entry))
-		if LiquidationEntryNote.objects.filter(entry=entry, liquidation__completed=False, liquidation__rejected=False).exists():
-			liquidation = LiquidationEntryNote.objects.get(entry=entry, liquidation__completed=False, liquidation__rejected=False).liquidation
+		if Liquidation.objects.filter(entries__signing=entry, completed=False, rejected=False).exists():
+			liquidation = Liquidation.objects.get(entries__signing=entry, completed=False, rejected=False)
 		else:
 			liquidation = None
 		possible_liquidations = Liquidation.objects.filter(submitted=False)
@@ -506,7 +506,7 @@ def createLiquidation(request):
 def liquidationDetailsView(request, pk=None):
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	permissions = get_object_or_404(UserPermissions, user=request.user)
-	liquidation_notes = EntryTable(liquidation.entries)
+	liquidation_notes = EntryTable(liquidation.entries.all())
 	RequestConfig(request).configure(liquidation_notes)
 	return render(request, 'liquidationDetails.html', { 'permissions' : permissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
 
