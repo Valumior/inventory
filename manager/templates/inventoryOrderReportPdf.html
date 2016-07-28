@@ -30,7 +30,7 @@
 				</tr>
 			{% endfor %}
 		</table>
-		{% if misplaced_entries or missing_entries %}
+		{% if misplaced_entries or missing_entries or duplicate_entries %}
 			<h1>Rozbieznosci</h1>
 			{% if misplaced_entries %}
 				<h2>Srodki trwale w niezgodnych lokalizacjach</h2>
@@ -43,6 +43,27 @@
 						<th>Status</th>
 					</tr>
 					{% for entry in misplaced_entries %}
+						<tr>
+							<td>{{ entry.entry.signing }}</td>
+							<td>{{ entry.entry.name }}</td>
+							<td>{{ entry.entry.room }}</td>
+							<td>{{ entry.report.room }}</td>
+							<td>{{ entry.status }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% endif %}
+			{% if duplicate_entries %}
+				<h2>Duplikaty srodkow trwalych</h2>
+				<table>
+					<tr>
+						<th>Oznakowanie</th>
+						<th>Nazwa</th>
+						<th>Pomieszczenie</th>
+						<th>Odnaleziono</th>
+						<th>Status</th>
+					</tr>
+					{% for entry in duplicate_entries %}
 						<tr>
 							<td>{{ entry.entry.signing }}</td>
 							<td>{{ entry.entry.name }}</td>
