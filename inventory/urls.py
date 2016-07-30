@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^liquidation/$', ManagerViews.liquidationView, name='liquidation'),
     url(r'^liquidation/create/$', ManagerViews.createLiquidation, name='createLiquidation'),
     url(r'^liquidation/(?P<pk>\d+)/$', ManagerViews.liquidationDetailsView, name='liquidationDetails'),
+    url(r'^liquidation/(?P<pk>\d+)/edit/$', ManagerViews.liquidationEditView, name='liquidationEdit'),
     url(r'^liquidation/(?P<pk>\d+)/submit/$', ManagerViews.submitLiquidation, name='submitLiquidation'),
     url(r'^liquidation/(?P<pk>\d+)/reject/$', ManagerViews.rejectLiquidation, name='rejectLiquidation'),
     url(r'^liquidation/(?P<pk>\d+)/complete/$', ManagerViews.completeLiquidation, name='completeLiquidation'),

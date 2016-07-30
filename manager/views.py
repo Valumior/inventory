@@ -511,6 +511,21 @@ def liquidationDetailsView(request, pk=None):
 	return render(request, 'liquidationDetails.html', { 'permissions' : permissions , 'liquidation' : liquidation, 'liquidation_notes' : liquidation_notes })
 
 @login_required(login_url='login')
+def liquidationEditView(request, pk=None):
+	permissions = get_object_or_404(UserPermissions, user=request.user)
+	if not permissions.is_admin:
+		if not permissions.is_liquidation:
+			if not permissions.is_liquidation_approver:
+				raise PermissionDenied
+	liquidation = get_object_or_404(Liquidation, pk=pk)
+	formset = LiquidationForm(request.POST or None, instance=liquidation)
+	if request.POST:
+		if formset.is_valid():
+			formset.save()
+			return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj Likwidacje/Przekazania', 'form_url' : reverse('liquidationEdit', kwargs={ 'pk' : pk })})
+
+@login_required(login_url='login')
 def submitLiquidation(request, pk=None):
 	permissions = get_object_or_404(UserPermissions, user=request.user)
 	if not permissions.is_admin:
@@ -532,6 +547,7 @@ def completeLiquidation(request, pk=None):
 	for entry in liquidation.entries:
 		entry.removed_value = 0.0
 		entry.removed_description = liquidation.getMsg()
+		entry.date_removed = datetime.now()
 		entry.save()
 	liquidation.save()
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))

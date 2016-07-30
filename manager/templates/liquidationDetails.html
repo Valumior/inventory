@@ -2,18 +2,21 @@
 {% load render_table from django_tables2 %}
 
 {% block content %}
-	<h1>Wniosek o likwidacje {{ liquidation }}</h1>
-	{% if permissions.is_liquidation %}
-		{% if liquidation.submitted %}
-			<a class="btn btn-default" href="{% url 'generateLiquidationApplication' pk=liquidation.id %}">Pobierz wniosek</a>
-		{% else %}
-			<a class="btn btn-default" href="{% url 'submitLiquidation' pk=liquidation.id %}">Zatwierdz wniosek</a>
+	<h1>Wniosek o likwidacje/przekazanie {{ liquidation }}</h1>
+	{% if permissions.is_liquidation or permissions.is_liquidation_approver %}
+		<a class="btn btn-default" href="{% url 'liquidationEdit' pk=liquidation.id %}">Edytuj parametry wniosku</a>
+		{% if permissions.is_liquidation %}
+			{% if liquidation.submitted %}
+				<a class="btn btn-default" href="{% url 'generateLiquidationApplication' pk=liquidation.id %}">Pobierz wniosek</a>
+			{% else %}
+				<a class="btn btn-default" href="{% url 'submitLiquidation' pk=liquidation.id %}">Zatwierdz wniosek</a>
+			{% endif %}
 		{% endif %}
-	{% endif %}
-	{% if permissions.is_liquidation_approver and liquidation.submitted %}
-		{% if not liquidation.rejected and not liquidation.completed %}
-			<a class="btn btn-default" href="{% url 'rejectLiquidation' pk=liquidation.id %}">Odrzuc likwidacje</a>
-			<a class="btn btn-default" href="{% url 'completeLiquidation' pk=liquidation.id %}">Potwierdz wykonanie likwidacji</a>
+		{% if permissions.is_liquidation_approver and liquidation.submitted %}
+			{% if not liquidation.rejected and not liquidation.completed %}
+				<a class="btn btn-default" href="{% url 'rejectLiquidation' pk=liquidation.id %}">Odrzuc likwidacje/przekazanie</a>
+				<a class="btn btn-default" href="{% url 'completeLiquidation' pk=liquidation.id %}">Potwierdz wykonanie likwidacji/przekazania</a>
+			{% endif %}
 		{% endif %}
 	{% endif %}
 	<h2>Srodki trwale do likwidacji</h2>

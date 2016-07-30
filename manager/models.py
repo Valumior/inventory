@@ -167,3 +167,9 @@ class Liquidation(models.Model):
 			elif self.document_type == TRANSFERENCE:
 				return 'Przekazanie na podstawie dokumentu ' + self.document_title
 		return ''
+	
+	def __unicode__(self):
+		if self.document_title == '':
+			return u'Wniosek %s' % (self.date_issued)
+		else:
+			return u'Wniosek %s' % (self.document_title)
