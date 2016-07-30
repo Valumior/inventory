@@ -234,7 +234,7 @@ def addEntryView(request, pk=None):
 		editing = False
 	
 	if permissions.is_admin and not editing:
-		formset = EntryForm(request.POST or None, instance=entry)
+		formset = EntryForm(request.POST or None, instance=entry, initial={ 'added_date' :  datetime.now()})
 	elif editing:
 		if permissions.is_admin:
 			formset = EntryEditForm(request.POST or None, instance=entry)

@@ -47,9 +47,18 @@ class EntryGroup(models.Model):
 		return u'%s' % (self.group_number)
 
 class Entry(models.Model):
+	GROUP = 'GRP'
+	KST = 'KST'
+	GROUP_TYPES = (
+		(GROUP, 'Grupy'),
+		(KST, 'Klasyfikacja Srodkow Trwalych')
+	)
+	
 	signing = models.CharField(max_length=50, unique=True, primary_key=True, verbose_name='Oznakowanie')
 	institution = models.ForeignKey(Institution, null=False, verbose_name='Instytucja')
-	group = models.ForeignKey(EntryGroup, null=False, verbose_name='Grupa')
+	grouping_type = models.CharField(max_length=3, choices=GROUP_TYPES, verbose_name='Typ grupowania',)
+	group = models.ForeignKey(EntryGroup, null=True, verbose_name='Grupa')
+	kst = models.DecimalField(max_digits=3, decimal_places=0, verbose_name='KST')
 	inventory_number = models.PositiveIntegerField()
 	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
 	date_added = models.DateTimeField(verbose_name='Data dodania')
@@ -70,15 +79,22 @@ class Entry(models.Model):
 	def save(self, *args, **kwargs):
 		
 		if not self.inventory_number:
-			self.group.group_count = self.group.group_count + 1
-			self.group.save()
-			self.inventory_number = self.group.group_count
+			if self.grouping_type == GROUP:
+				self.group.group_count = self.group.group_count + 1
+				self.group.save()
+				self.inventory_number = self.group.group_count
+			elif self.grouping_type == KST:
+				max_kst = Entry.objects.filter(grouping_type=KST).aggregate(Max('inventory_number'))['inventory_number__max']
+				self.inventory_number = max_kst + 1
 		
 		if not self.signing:
 			sign_sections = []
 			sign_sections.extend(self.institution.name_tag)
 			sign_sections.extend(', ')
-			sign_sections.extend(self.group.group_number)
+			if self.grouping_type == GROUP:
+				sign_sections.extend(self.group.group_number)
+			elif self.grouping_type == KST:
+				sign_sections.extend(str(self.kst))
 			sign_sections.extend('/')
 			sign_sections.extend(str(self.inventory_number))
 			

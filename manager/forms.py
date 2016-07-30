@@ -37,7 +37,16 @@ class EntryGroupForm(ModelForm):
 class EntryForm(ModelForm):
 	class Meta:
 		model = Entry
-		fields = ('institution', 'group', 'date_added', 'added_description', 'added_value', 'name', 'short_description', 'description', 'room', 'caretaker')
+		fields = ('institution', 'grouping_type', 'group', 'kst', 'date_added', 'added_description', 'added_value', 'name', 'short_description', 'description', 'room', 'caretaker')
+
+	def clean_group(self):
+		data = self.cleaned_data
+		if data['grouping_type'] == 'KST':
+			data['group'] = None
+		elif data['grouping_type'] == 'GRP':
+			if data['group'] is None:
+				raise ValidationError('Brak grupy')
+		return data['group']
 
 class EntryEditForm(ModelForm):
 	class Meta:
@@ -73,6 +82,3 @@ class LoginForm(forms.Form):
 	
 class SearchForm(forms.Form):
 	search = forms.CharField(label='Search')
-
-class MassSelectForm(forms.Form):
-	selected = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(), choices=Entry.objects.all())
