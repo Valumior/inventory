@@ -63,7 +63,7 @@ class UserPermissionsTable(tables.Table):
 	
 	class Meta:
 		model = UserPermissions
-		fields = ('user', 'is_admin', 'is_user_manager', 'is_add_allowed', 'is_edit_allowed', 'is_session_controller', 'is_inventory')
+		fields = ('user', 'is_admin', 'is_user_manager', 'is_add_allowed', 'is_edit_allowed', 'is_session_controller', 'is_inventory', 'is_liquidation_approver', 'is_liquidation')
 		attrs = table_attrs
 
 class InventoryOrderTable(tables.Table):

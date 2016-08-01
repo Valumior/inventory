@@ -18,6 +18,8 @@
 		<li>Dodawanie wpisow: {% if target_permissions.is_add_allowed %}Tak{% else %}Nie{% endif %}</li>
 		<li>Zlecanie inwentaryzacji: {% if target_permissions.is_session_controller %}Tak{% else %}Nie{% endif %}</li>
 		<li>Przeprowadzanie inwentaryzacji: {% if target_permissions.is_inventory %}Tak{% else %}Nie{% endif %}</li>
+		<li>Zatwierdzanie likwidacji/przekazania: {% if target_permissions.is_liquidation_approver %}Tak{% else %}Nie{% endif %}</li>
+		<li>Wnioskowanie likwidacji/przekazania: {% if target_permissions.is_liquidation %}Tak{% else %}Nie{% endif %}</li>
 	</ul>
 	{% if permissions.is_admin or permissions.is_user_manager and not target_permissions.is_admin %}
 		<a class="btn btn-default" href="{% url 'userRank' pk=selectedUser.id %}">Edytuj</a>
