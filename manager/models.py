@@ -154,9 +154,9 @@ class Liquidation(models.Model):
 
 	def getMsg(self):
 		if self.document_title:
-			if self.document_type == LIQUIDATION:
+			if self.document_type == self.LIQUIDATION:
 				return 'Likwidacja na podstawie dokumentu ' + self.document_title
-			elif self.document_type == TRANSFERENCE:
+			elif self.document_type == self.TRANSFERENCE:
 				return 'Przekazanie na podstawie dokumentu ' + self.document_title
 		return ''
 	
