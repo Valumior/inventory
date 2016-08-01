@@ -234,8 +234,9 @@ def addEntryView(request, pk=None):
 		editing = False
 	
 	if permissions.is_admin and not editing:
-		if UserSettings.objects.get(user=request.user).exists():
-			init = UserSettings.objects.get(user=request.user).getDefaultsDict()
+		user_settings = UserSettings.objects.get(user=request.user)
+		if user_settings:
+			init = user_settings.getDefaultsDict()
 			init['added_date'] = datetime.now()
 		else:
 			init = { 'added_date' :  datetime.now()}
@@ -600,16 +601,18 @@ def liquidationEntryRemove(request, lpk=None, epk=None):
 
 @login_required(login_url='login')
 def settingsView(request):
-	if not UserSettings.objects.get(user=request.user).exists():
-		UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None).save()
-	user_settings = get_object_or_404(UserSettings, user=request.user)
+	user_settings = UserSettings.objects.get(user=request.user)
+	if not user_settings:
+		user_settings = UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None)
+		user_settings.save()
 	return render(request, 'settings.html', { 'user_settings' : user_settings })
 
 @login_required(login_url='login')
 def settingsEditView(request):
-	if not UserSettings.objects.get(user=request.user).exists():
-		UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None).save()
-	user_settings = get_object_or_404(UserSettings, user=request.user)
+	user_settings = UserSettings.objects.get(user=request.user)
+	if not user_settings:
+		user_settings = UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None)
+		user_settings.save()
 	formset = UserSettingsForm(request.POST or None, instance=user_settings)
 	if request.method == 'POST':
 		if formset.is_valid():
