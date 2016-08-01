@@ -68,21 +68,21 @@ class Entry(models.Model):
 	def save(self, *args, **kwargs):
 		
 		if not self.inventory_number:
-			if self.grouping_type == GROUP:
+			if self.grouping_type == self.GROUP:
 				self.group.group_count = self.group.group_count + 1
 				self.group.save()
 				self.inventory_number = self.group.group_count
-			elif self.grouping_type == KST:
-				max_kst = Entry.objects.filter(grouping_type=KST).aggregate(Max('inventory_number'))['inventory_number__max']
+			elif self.grouping_type == self.KST:
+				max_kst = Entry.objects.filter(grouping_type=self.KST).aggregate(Max('inventory_number'))['inventory_number__max']
 				self.inventory_number = max_kst + 1
 		
 		if not self.signing:
 			sign_sections = []
 			sign_sections.extend(self.institution.name_tag)
 			sign_sections.extend(', ')
-			if self.grouping_type == GROUP:
+			if self.grouping_type == self.GROUP:
 				sign_sections.extend(self.group.group_number)
-			elif self.grouping_type == KST:
+			elif self.grouping_type == self.KST:
 				sign_sections.extend(str(self.kst))
 			sign_sections.extend('/')
 			sign_sections.extend(str(self.inventory_number))

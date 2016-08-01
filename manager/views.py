@@ -237,9 +237,9 @@ def addEntryView(request, pk=None):
 		user_settings = UserSettings.objects.get(user=request.user)
 		if user_settings:
 			init = user_settings.getDefaultsDict()
-			init['added_date'] = datetime.now()
+			init['date_added'] = datetime.now()
 		else:
-			init = { 'added_date' :  datetime.now()}
+			init = { 'date_added' :  datetime.now()}
 		formset = EntryForm(request.POST or None, instance=entry, initial=init)
 	elif editing:
 		if permissions.is_admin:
