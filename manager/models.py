@@ -75,6 +75,8 @@ class Entry(models.Model):
 				self.inventory_number = self.group.group_count
 			elif self.grouping_type == self.KST:
 				max_kst = Entry.objects.filter(grouping_type=self.KST).aggregate(Max('inventory_number'))['inventory_number__max']
+				if not max_kst:
+					max_kst = 0
 				self.inventory_number = max_kst + 1
 		
 		if not self.signing:
