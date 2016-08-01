@@ -19,6 +19,7 @@
 					<li><a href="{% url 'user' %}">Uzytkownicy</a></li>
 					<li><a href="{% url 'entryGroup' %}">Grupy</a></li>
 					<li><a href="{% url 'institution' %}">Instytucje</a></li>
+					<li><a href="{% url 'settings' %}">Ustawienia</a></li>
 					<li><a href="{% url 'logout' %}">Wyloguj {{ user.get_username }}</a></li>
 				{% else %}
 					<li><a href="{% url 'login' %}?next={{ request.path }}">Zaloguj</a></li>
