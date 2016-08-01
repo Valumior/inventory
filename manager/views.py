@@ -593,6 +593,24 @@ def liquidationEntryRemove(request, lpk=None, epk=None):
 	liquidation.entries.remove(entry)
 	return HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
 
+@login_required(login_url='login')
+def settingsView(request):
+	if not UserSettings.objects.get(user=request.user).exists():
+		UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None).save()
+	user_settings = get_object_or_404(UserSettings, user=request.user)
+	return render(request, 'settings.html', { 'user_settings' : user_settings })
+
+@login_required(login_url='login')
+def settingsEditView(request):
+	if not UserSettings.objects.get(user=request.user).exists():
+		UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None).save()
+	user_settings = get_object_or_404(UserSettings, user=request.user)
+	formset = UserSettingsForm(request.POST or None, instance=user_settings)
+	if request.method == 'POST':
+		if formset.is_valid():
+			formset.save()
+			HttpResponseRedirect(reverse('settings'))
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj Ustawienia', 'form_url' : reverse('settingsEdit')})
 
 @api_view(['GET'])
 def apiEntries(request):

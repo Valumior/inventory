@@ -6,17 +6,6 @@ from manager.util import URLify_entry_signing
 
 import string, random
 
-class UserPermissions(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
-	is_admin = models.BooleanField(default=False, verbose_name='Administrator')
-	is_session_controller = models.BooleanField(default=False, verbose_name='Kontroler sesji inwentaryzayjnych')
-	is_edit_allowed = models.BooleanField(default=False, verbose_name='Edycja wpisow')
-	is_add_allowed = models.BooleanField(default=False, verbose_name='Dodawanie wpisow')
-	is_user_manager = models.BooleanField(default=False, verbose_name='Zarzadzanie uzytkownikami')
-	is_inventory = models.BooleanField(default=False, verbose_name='Inwentaryzacja')
-	is_liquidation = models.BooleanField(default=False, verbose_name='Wnioskowanie likwidacji')
-	is_liquidation_approver = models.BooleanField(default=False, verbose_name='Zatwierdzanie likwidacji')
-	
 class Address(models.Model):
 	city = models.CharField(max_length=100, blank=False, verbose_name='Miasto')
 	street = models.CharField(max_length=200, blank=False, verbose_name='Ulica')
@@ -173,3 +162,20 @@ class Liquidation(models.Model):
 			return u'Wniosek %s' % (self.date_issued)
 		else:
 			return u'Wniosek %s' % (self.document_title)
+
+class UserPermissions(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
+	is_admin = models.BooleanField(default=False, verbose_name='Administrator')
+	is_session_controller = models.BooleanField(default=False, verbose_name='Kontroler sesji inwentaryzayjnych')
+	is_edit_allowed = models.BooleanField(default=False, verbose_name='Edycja wpisow')
+	is_add_allowed = models.BooleanField(default=False, verbose_name='Dodawanie wpisow')
+	is_user_manager = models.BooleanField(default=False, verbose_name='Zarzadzanie uzytkownikami')
+	is_inventory = models.BooleanField(default=False, verbose_name='Inwentaryzacja')
+	is_liquidation = models.BooleanField(default=False, verbose_name='Wnioskowanie likwidacji')
+	is_liquidation_approver = models.BooleanField(default=False, verbose_name='Zatwierdzanie likwidacji')
+
+class UserSettings(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=False)
+	default_institution = models.ForeignKey(Institution, null=True, on_delete=models.SET_NULL, blank=True)
+	default_room = models.ForeignKey(Room, null=True, on_delete=models.SET_NULL, blank=True)
+	default_group = models.ForeignKey(EntryGroup, null=True, on_delete=models.SET_NULL, blank=True)

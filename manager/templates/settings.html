@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Ustawienia</h1>
+	<a class="btn btn-default" href="{% url 'settingsEdit' %}">Edytuj</a>
+	<table>
+		<tr>
+			<th>Domyslna instytucja</th>
+			<th>Domyslna grupa</th>
+			<th>Domyslne pomieszczenie</th>
+		</tr>
+		<tr>
+			<td>
+				{% if user_settings.default_institution %}
+				{{ user_settings.default_institution }}
+				{% else %}
+					---
+				{% endif %}
+			</td>
+				{% if user_settings.default_group %}
+					<a class="btn btn-default" href="{% url 'entryGroupDetails' pk=user_settings.default_group.id %}">{{ user_settings.default_group }}</a>
+				{% else %}
+					---
+				{% endif %}
+			<td>
+			</td>
+				{% if user_settings.default_room %}
+					<a class="btn btn-default" href="{% url 'roomDetails' pk=user_settings.default_room.id %}">{{ user_settings.default_room }}</a>
+				{% else %}
+					---
+				{% endif %}
+			<td>
+			</td>
+		</tr>
+	</table>
+{% endblock %}
