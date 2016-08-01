@@ -550,7 +550,8 @@ def completeLiquidation(request, pk=None):
 			raise PermissionDenied
 	liquidation = get_object_or_404(Liquidation, pk=pk)
 	liquidation.completed = True
-	for entry in liquidation.entries:
+	entries = liquidation.entries.all()
+	for entry in entries:
 		entry.removed_value = 0.0
 		entry.removed_description = liquidation.getMsg()
 		entry.date_removed = datetime.now()
