@@ -181,4 +181,4 @@ class UserSettings(models.Model):
 	default_group = models.ForeignKey(EntryGroup, null=True, on_delete=models.SET_NULL, blank=True)
 	
 	def getDefaultsDict(self):
-		return { 'institution' : self.default_institution , 'group' : self.default_group , self.'room' : default_room }
+		return { 'institution' : self.default_institution , 'group' : self.default_group , 'room' : self.default_room }
