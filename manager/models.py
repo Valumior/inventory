@@ -46,7 +46,7 @@ class Entry(models.Model):
 	signing = models.CharField(max_length=50, unique=True, primary_key=True, verbose_name='Oznakowanie')
 	institution = models.ForeignKey(Institution, null=False, verbose_name='Instytucja')
 	grouping_type = models.CharField(max_length=3, choices=GROUP_TYPES, verbose_name='Typ grupowania',)
-	group = models.ForeignKey(EntryGroup, null=True, verbose_name='Grupa')
+	group = models.ForeignKey(EntryGroup, null=True, verbose_name='Grupa', blank=True)
 	kst = models.DecimalField(max_digits=3, decimal_places=0, verbose_name='KST')
 	inventory_number = models.PositiveIntegerField()
 	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
