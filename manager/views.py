@@ -621,6 +621,22 @@ def settingsEditView(request):
 			HttpResponseRedirect(reverse('settings'))
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj Ustawienia', 'form_url' : reverse('settingsEdit')})
 
+@login_required(login_url='login')
+def generateRoomQrSheet(request, pk=None):
+	room = get_object_or_404(Room, pk=pk)
+	entries = Entry.objects.filter(room=room)
+	columns = 3
+	grid = []
+	row_count = 0
+	for idx, entry in enumerate(entries):
+		if idx % columns == 0:
+			grid.append([])
+			if idx != 0:
+				row_count = row_count + 1
+		grid[row_count].append(entry.signing)
+	return render_to_pdf_response(request, 'qrSheetPdf.html', { 'grid' : grid })
+	
+
 @api_view(['GET'])
 def apiEntries(request):
 	if request.method == 'GET':

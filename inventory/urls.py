@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^address/edit/(?P<pk>\d+)/$', ManagerViews.addAddressView, name='editAddress'),
     url(r'^room/$', ManagerViews.roomView, name='room'),
     url(r'^room/(?P<pk>\d+)/$', ManagerViews.roomDetailsView, name='roomDetails'),
+    url(r'^room/(?P<pk>\d+)/qr/$', ManagerViews.generateRoomQrSheet, name='generateQrRoomSheet'),
     url(r'^room/add/$', ManagerViews.addRoomView, name='addRoom'),
     url(r'^room/edit/(?P<pk>\d+)/$', ManagerViews.addRoomView, name='editRoom'),
     url(r'^user/$', ManagerViews.userView, name='user'),

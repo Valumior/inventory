@@ -1,0 +1,15 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+	<table class="grid">
+		{% for row in grid %}
+			<tr>
+				{% for cell in row %}
+					<td><div class="cell">
+						{{ cell }}
+					</div></td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
