@@ -633,7 +633,7 @@ def generateRoomQrSheet(request, pk=None):
 			grid.append([])
 			if idx != 0:
 				row_count = row_count + 1
-		grid[row_count].append(entry)
+		grid[row_count].append({ 'value' : entry.signing , 'img' : reverse('generateQr', kwargs={ 'pk' : entry.getURL() }) })
 	return render_to_pdf_response(request, 'qrSheetPdf.html', { 'grid' : grid })
 	
 

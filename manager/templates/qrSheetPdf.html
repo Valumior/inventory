@@ -41,8 +41,8 @@
 			<tr>
 				{% for cell in row %}
 					<td><div class="cell">
-						<img src="{% url 'generateQr' pk=cell.getURL %}"/>
-						<span>{{ cell.signing }}</span>
+						<img src="{{ cell.img }}"/>
+						<span>{{ cell.value }}</span>
 					</div></td>
 				{% endfor %}
 			</tr>
