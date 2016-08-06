@@ -41,8 +41,8 @@
 			<tr>
 				{% for cell in row %}
 					<td><div class="cell">
-						<img src="{{ cell.img }}"/>
-						<span>{{ cell.value }}</span>
+						<pdf:barcode value="{{ cell }}" type="qr" barwidth=200 barheigth=200/>
+						<span>{{ cell }}</span>
 					</div></td>
 				{% endfor %}
 			</tr>
