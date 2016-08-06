@@ -2,12 +2,20 @@
 
 {% block extra_style %}
 	<style type="text/css">
-		@page{
+		@page {
 			size: "A4";
 			margin-left: 0mm;
 			margin-right: 0mm;
 			margin-top: 0mm;
 			margin-bottom: 0mm;
+			
+			@frame header {
+				-pdf-frame-content: page-header;
+				margin-left: 0mm;
+				margin-right: 0mm;
+				margin-top: 0mm;
+				margin-bottom: 0mm;	
+			}
 		}
 		
 		.grid {
