@@ -1,6 +1,6 @@
 {% extends "easy_pdf/base.html" %}
 
-{% block extra_style %}
+{% block layout_style %}
 	<style type="text/css">
 		@page {
 			size: "A4";
@@ -17,7 +17,11 @@
 				margin-bottom: 0mm;	
 			}
 		}
-		
+	</style>
+{% endblock %}
+
+{% block extra_style %}
+	<style type="text/css">
 		.grid {
 			border-collapse: collapse;
 			margin: 0cm;
@@ -30,7 +34,6 @@
 			max-width: 70.0mm;
 			height: 37.0mm;
 			max-height: 37.0mm;
-			overflow: hidden;
 			transform: rotate(90deg);
 		}
 	</style>
