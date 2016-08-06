@@ -27,14 +27,16 @@
 			margin: 0cm;
 		}
 		
+		.row {
+			height: 37.0mm;
+			max-height: 37.0mm;
+		}
+		
 		.cell {
 			text-align: center;
 			verical-align: middle;
 			width: 70.0mm;
 			max-width: 70.0mm;
-			height: 37.0mm;
-			max-height: 37.0mm;
-			transform: rotate(90deg);
 		}
 	</style>
 {% endblock %}
@@ -42,7 +44,7 @@
 {% block content %}
 	<table class="grid">
 		{% for row in grid %}
-			<tr>
+			<tr class="row">
 				{% for cell in row %}
 					<td><div class="cell">
 						<pdf:barcode value="{{ cell }}" type="qr" barwidth=100 barheigth=100/>
