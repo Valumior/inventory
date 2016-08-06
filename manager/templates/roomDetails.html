@@ -4,7 +4,7 @@
 {% block content %}
 
 	<h1>{{ room }}</h1>
-	<a class="btn btn-default" href="{% url 'generateQrRoomSheet' pk=room.id %}">Drukuj kody qr</a>
+	<a class="btn btn-default" href="{% url 'generateQrRoomSheet' rpk=room.id %}">Drukuj kody qr</a>
 
 	{% render_table entries %}
 

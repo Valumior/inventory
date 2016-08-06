@@ -6,6 +6,7 @@
 	{% if user.is_staff %}
 		<a class="btn btn-default" href="{% url 'addEntry' %}">Dodaj wpis</a>
 	{% endif %}
+	<a class="btn btn-default" href="{% url 'generateQrSheet' %}">Drukuj kody qr</a>
 	<form class="form-inline" method="post" action="{% url 'main' %}">
 		<div class="form group">
 		{% csrf_token %}

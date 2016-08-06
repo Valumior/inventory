@@ -622,9 +622,15 @@ def settingsEditView(request):
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj Ustawienia', 'form_url' : reverse('settingsEdit')})
 
 @login_required(login_url='login')
-def generateRoomQrSheet(request, pk=None):
-	room = get_object_or_404(Room, pk=pk)
-	entries = Entry.objects.filter(room=room)
+def generateRoomQrSheet(request, rpk=None, apk=None):
+	if rpk:
+		room = get_object_or_404(Room, pk=rpk)
+		entries = Entry.objects.filter(room=room)
+	elif apk:
+		address = get_object_or_404(Address, pk=apk)
+		entries = Entry.objects.filter(room__address=address)
+	else:
+		entries = Entry.objects.all()
 	columns = 3
 	grid = []
 	row_count = 0
