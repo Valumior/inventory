@@ -28,6 +28,7 @@
 		}
 		
 		.row {
+			min-height: 37.0mm;
 			height: 37.0mm;
 			max-height: 37.0mm;
 		}
@@ -35,6 +36,7 @@
 		.cell {
 			text-align: center;
 			height: 100%;
+			min-width: 70.mm;
 			width: 70.0mm;
 			max-width: 70.0mm;
 		}
@@ -46,14 +48,12 @@
 		{% for row in grid %}
 			<tr class="row">
 				{% for cell in row %}
-					<td>
-						<div class="cell">
-							<div>
-								<pdf:barcode value="{{ cell }}" type="qr" barwidth="50" barheight="50"/>
-							</div>
-							<div>
-								<span>{{ cell }}</span>
-							</div>
+					<td class="cell">
+						<div>
+							<pdf:barcode value="{{ cell }}" type="qr" barwidth="50" barheight="50"/>
+						</div>
+						<div>
+							<span>{{ cell }}</span>
 						</div>
 					</td>
 				{% endfor %}
