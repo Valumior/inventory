@@ -1,62 +1,47 @@
-{% extends "easy_pdf/base.html" %}
-
-{% block layout_style %}
-	<style type="text/css">
-		@page {
-			size: "A4";
-			margin-left: 0mm;
-			margin-right: 0mm;
-			margin-top: 0mm;
-			margin-bottom: 0mm;
-			
-			@frame header {
-				-pdf-frame-content: page-header;
-				margin-left: 0mm;
-				margin-right: 0mm;
-				margin-top: 0mm;
-				margin-bottom: 0mm;	
+<html>
+	<head>
+		<style type="text/css">
+			.grid {
+				border-collapse: collapse;
+				margin: 0cm;
 			}
-		}
-	</style>
-{% endblock %}
-
-{% block extra_style %}
-	<style type="text/css">
-		.grid {
-			border-collapse: collapse;
-			margin: 0cm;
-		}
-		
-		.row {
-			min-height: {{ cell.height }}cm;
-			height: {{ cell.height }}cm;
-			max-height: {{ cell.height }}cm;
-		}
-		
-		.cell {
-			text-align: center;
-			min-width: {{ cell.width }}cm;
-			width: {{ cell.width }}cm;
-			max-width: {{ cell.width }}cm;
-		}
-	</style>
-{% endblock %}
-
-{% block content %}
-	<table class="grid">
-		{% for row in grid %}
-			<tr class="row">
-				{% for cell in row %}
-					<td class="cell">
-						<div>
-							<pdf:barcode value="{{ cell }}" type="qr" barwidth="50" barheight="50"/>
-						</div>
-						<div>
-							<span>{{ cell }}</span>
-						</div>
-					</td>
-				{% endfor %}
-			</tr>
-		{% endfor %}
-	</table>
-{% endblock %}
+			
+			.row {
+				min-height: {{ cell.height }}cm;
+				height: {{ cell.height }}cm;
+				max-height: {{ cell.height }}cm;
+			}
+			
+			.cell {
+				text-align: center;
+				min-width: {{ cell.width }}cm;
+				width: {{ cell.width }}cm;
+				max-width: {{ cell.width }}cm;
+			}
+			
+			img {
+				height: auto;
+				max-height 80%;
+				width: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<table class="grid">
+			{% for row in grid %}
+				<tr class="row">
+					{% for cell in row %}
+						<td class="cell">
+							<div>
+								<img src="{% url 'generateQr' pk=cell.getURL %}"/>
+							</div>
+							<div>
+								<span>{{ cell.signing }}</span>
+							</div>
+						</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>
