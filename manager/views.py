@@ -640,7 +640,7 @@ def generateRoomQrSheet(request, rpk=None, apk=None):
 			if idx != 0:
 				row_count = row_count + 1
 		grid[row_count].append(entry)
-	cell = { 'width' : 7 , 'height' : 3.7 }
+	cell = { 'width' : 7 , 'height' : 3.7 , 'img_height' : 3.7 - 1.5 }
 	return render(request, 'qrSheetPdf.html', { 'grid' : grid , 'cell' : cell })
 	
 
