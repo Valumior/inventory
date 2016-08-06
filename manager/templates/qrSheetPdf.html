@@ -1,6 +1,10 @@
 <html>
 	<head>
 		<style type="text/css">
+			body {
+				font-family: arial;
+			}
+			
 			.grid {
 				border-collapse: collapse;
 				margin: 0cm;
@@ -20,8 +24,7 @@
 			}
 			
 			img {
-				height: auto;
-				max-height 80%;
+				max-height: {{ cell.height|"-1.5" }}cm;
 				width: auto;
 			}
 		</style>
@@ -32,12 +35,8 @@
 				<tr class="row">
 					{% for cell in row %}
 						<td class="cell">
-							<div>
-								<img src="{% url 'generateQr' pk=cell.getURL %}"/>
-							</div>
-							<div>
-								<span>{{ cell.signing }}</span>
-							</div>
+							<img src="{% url 'generateQr' pk=cell.getURL %}"/>
+							<div>{{ cell.signing }}</div>
 						</td>
 					{% endfor %}
 				</tr>
