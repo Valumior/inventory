@@ -640,7 +640,7 @@ def generateRoomQrSheet(request, rpk=None, apk=None):
 			if idx != 0:
 				row_count = row_count + 1
 		grid[row_count].append(entry.signing)
-	cell = { 'width' : 7 , 'height' : 7 }
+	cell = { 'width' : 7 , 'height' : 3.7 }
 	return render_to_pdf_response(request, 'qrSheetPdf.html', { 'grid' : grid , 'cell' : cell })
 	
 
