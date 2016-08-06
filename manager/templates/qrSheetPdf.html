@@ -27,7 +27,10 @@
 			text-align: center;
 			verical-align: middle;
 			width: 70.0mm;
+			max-width: 70.0mm;
 			height: 37.0mm;
+			max-height: 37.0mm;
+			overflow: hidden;
 		}
 	</style>
 {% endblock %}
@@ -38,7 +41,8 @@
 			<tr>
 				{% for cell in row %}
 					<td><div class="cell">
-						<pdf:barcode value="{{ cell }}" type="qr" humanreadable="1" barwidth=120 barheigth=120/>
+						<img src="{% url 'generateQr' pk=cell %}"/>
+						<span>{{ cell }}</span>
 					</div></td>
 				{% endfor %}
 			</tr>
