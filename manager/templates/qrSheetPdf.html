@@ -34,7 +34,7 @@
 		
 		.cell {
 			text-align: center;
-			verical-align: middle;
+			height: 100%;
 			width: 70.0mm;
 			max-width: 70.0mm;
 		}
@@ -46,10 +46,16 @@
 		{% for row in grid %}
 			<tr class="row">
 				{% for cell in row %}
-					<td><div class="cell">
-						<pdf:barcode value="{{ cell }}" type="qr" barwidth=100 barheigth=100/>
-						<span>{{ cell }}</span>
-					</div></td>
+					<td>
+						<div class="cell">
+							<div>
+								<pdf:barcode value="{{ cell }}" type="qr"/>
+							</div>
+							<div>
+								<span>{{ cell }}</span>
+							</div>
+						</div>
+					</td>
 				{% endfor %}
 			</tr>
 		{% endfor %}
