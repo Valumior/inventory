@@ -6,7 +6,7 @@ from manager.models import *
 
 class BootstrapModelFormBase(ModelForm):
 	def __init__(self, *args, **kwargs):
-		form = super(BootstrapModelFormBase, self):__init__(*args, **kwargs)
+		form = super(BootstrapModelFormBase, self).__init__(*args, **kwargs)
 		for visible in form.visible_fields():
 			visible.field.widget.attrs['class'] = 'form-control'
 
