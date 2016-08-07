@@ -48,7 +48,7 @@ class EntryGroupForm(BootstrapModelFormBase):
 class EntryForm(BootstrapModelFormBase):
 	class Meta:
 		model = Entry
-		fields = ('institution', 'grouping_type', 'group', 'kst', 'date_added', 'added_description', 'added_value', 'name', 'short_description', 'description', 'room', 'caretaker')
+		fields = ('institution', 'grouping_type', 'group', 'kst', 'inventory_number', 'date_added', 'added_description', 'added_value', 'name', 'short_description', 'description', 'room', 'caretaker')
 
 	def clean_group(self):
 		data = self.cleaned_data
@@ -58,6 +58,16 @@ class EntryForm(BootstrapModelFormBase):
 			if data['group'] is None:
 				raise ValidationError('Brak grupy')
 		return data['group']
+		
+	def clean_inventory_number(self):
+		data = self.cleaned_data
+		if data['grouping_type'] == 'KST':
+			if Entry.objects.filter(institution=data['institution'], kst=data['kst'], inventory_number=data['inventory_number']).exists():
+				raise ValidationError('podany numer juz istnieje')
+		elif data['grouping_type'] == 'GRP':
+			if Entry.objects.filter(institution=data['institution'], group=data['group'], inventory_number=data['inventory_number']).exists():
+				raise ValidationError('podany numer juz istnieje')
+		return data['inventory_number']
 
 class EntryEditForm(BootstrapModelFormBase):
 	class Meta:

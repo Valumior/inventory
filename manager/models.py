@@ -78,6 +78,10 @@ class Entry(models.Model):
 				if not max_kst:
 					max_kst = 0
 				self.inventory_number = max_kst + 1
+		else:
+			if self.grouping_type == self.GROUP:
+				if self.inventory_number > self.group.group_count:
+					self.group.group_count = self.inventory_number
 		
 		if not self.signing:
 			sign_sections = []
@@ -114,12 +118,18 @@ class InventoryOrder(models.Model):
 	completed = models.BooleanField(default=False)
 	date_completed = models.DateTimeField(null=True, blank=True)
 	
+	def __unicode__(self):
+		return u'Zlecenie %s' % (self.date_ordered.strftime('%x'))
+	
 class InventoryRoomReport(models.Model):
 	room = models.ForeignKey(Room, verbose_name='Pomieszczenie')
 	date_posted = models.DateTimeField(auto_now_add=True, verbose_name='Data')
 	entries = models.ManyToManyField(Entry, through='InventoryEntryNote')
 	author = models.ForeignKey(User, null=True, blank=True, verbose_name='Autor')
 	order = models.ForeignKey(InventoryOrder)
+	
+	def __unicode__(self):
+		return u'Raport %s, %s, %s' % (self.date_posted.strftime('%x'), self.room, self.order)
 	
 class InventoryEntryNote(models.Model):
 	MISSING = 'M'
