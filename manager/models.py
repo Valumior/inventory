@@ -49,7 +49,7 @@ class Entry(models.Model):
 	grouping_type = models.CharField(max_length=3, choices=GROUP_TYPES, verbose_name='Typ grupowania', blank=False, default=KST)
 	group = models.ForeignKey(EntryGroup, null=True, verbose_name='Grupa', blank=True)
 	kst = models.DecimalField(max_digits=3, decimal_places=0, verbose_name='KST')
-	inventory_number = models.PositiveIntegerField()
+	inventory_number = models.PositiveIntegerField(blank=True)
 	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
 	date_added = models.DateTimeField(verbose_name='Data dodania')
 	added_value = models.DecimalField(max_digits=10, decimal_places=2, blank=False, verbose_name='Wartosc poczatkowa')
