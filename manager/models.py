@@ -82,6 +82,7 @@ class Entry(models.Model):
 			if self.grouping_type == self.GROUP:
 				if self.inventory_number > self.group.group_count:
 					self.group.group_count = self.inventory_number
+					self.group.save()
 		
 		if not self.signing:
 			sign_sections = []
