@@ -4,42 +4,48 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from manager.models import *
 
-class UserPermissionsForm(ModelForm):
+class BootstrapModelFormBase(ModelForm):
+	def __init__(self, *args, **kwargs):
+		form = super(BootstrapModelFormBase, self):__init__(*args, **kwargs)
+		for visible in form.visible_fields():
+			visible.field.widget.attrs['class'] = 'form-control'
+
+class UserPermissionsForm(BootstrapModelFormBase):
 	class Meta:
 		model = UserPermissions
 		exclude = ('user',)
 
-class UserPermissionsFormNoAdmin(ModelForm):
+class UserPermissionsFormNoAdmin(BootstrapModelFormBase):
 	class Meta:
 		model = UserPermissions
 		exclude = ('user', 'is_admin', 'is_user_manager')
 
-class UserSettingsForm(ModelForm):
+class UserSettingsForm(BootstrapModelFormBase):
 	class Meta:
 		model = UserSettings
 		exclude = ('user',)
 
-class AddresForm(ModelForm):
+class AddresForm(BootstrapModelFormBase):
 	class Meta:
 		model = Address
 		fields = '__all__'
 
-class RoomForm(ModelForm):
+class RoomForm(BootstrapModelFormBase):
 	class Meta:
 		model = Room
 		fields = '__all__'
 
-class InstitutionForm(ModelForm):
+class InstitutionForm(BootstrapModelFormBase):
 	class Meta:
 		model = Institution
 		fields = '__all__'
 
-class EntryGroupForm(ModelForm):
+class EntryGroupForm(BootstrapModelFormBase):
 	class Meta:
 		model = EntryGroup
 		fields = ('group_number', 'description')
 
-class EntryForm(ModelForm):
+class EntryForm(BootstrapModelFormBase):
 	class Meta:
 		model = Entry
 		fields = ('institution', 'grouping_type', 'group', 'kst', 'date_added', 'added_description', 'added_value', 'name', 'short_description', 'description', 'room', 'caretaker')
@@ -53,22 +59,22 @@ class EntryForm(ModelForm):
 				raise ValidationError('Brak grupy')
 		return data['group']
 
-class EntryEditForm(ModelForm):
+class EntryEditForm(BootstrapModelFormBase):
 	class Meta:
 		model = Entry
 		fields = ('name', 'short_description', 'description', 'room', 'caretaker')
 
-class EntryFormSimple(ModelForm):
+class EntryFormSimple(BootstrapModelFormBase):
 	class Meta:
 		model = Entry
 		fields = ('room', 'short_description','description')
 
-class LiquidationForm(ModelForm):
+class LiquidationForm(BootstrapModelFormBase):
 	class Meta:
 		model = Liquidation
 		fields = ('document_type', 'document_title')
 
-class UserForm(ModelForm):
+class UserForm(BootstrapModelFormBase):
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 	
 	class Meta:

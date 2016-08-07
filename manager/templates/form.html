@@ -2,9 +2,22 @@
 
 {% block content %}
 	<h2>{{ form_title }}</h2>
-	<form enctype="multipart/form-data" method="post" url="{{ form_url }}">
+	<form class="form-horizontal" enctype="multipart/form-data" method="post" url="{{ form_url }}">
 		{% csrf_token %}
-		{{ formset.as_p }}
-		<button type="submit">Zapisz</button>
+		{% for field in formset %}
+			<div class="form-group">
+				{{ field.errors }}
+				<label class="control-label col-sm-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+				<div class="col-sm-10">
+					{{ field }}
+				</div>
+				{% if.field.help_text %}
+				<p>{{ field.help_text|safe }}</p>
+				{% endif %}
+			</div>
+		{% endfor %}
+		<div class="form-group">
+			<button class="btn btn-default" type="submit">Zapisz</button>
+		</div>
 	</form>
 {% endblock %}

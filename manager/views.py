@@ -184,16 +184,13 @@ def addAddressView(request, pk=None):
 		address = get_object_or_404(Address, pk=pk)
 	else:
 		address = Address()
-	
 	formset = AddresForm(request.POST or None, instance=address)
-	
 	if request.method == 'POST':
 		if formset.is_valid():
 			addr = formset.save(commit=False)
 			addr.save()
 			return HttpResponseRedirect(reverse('address'))
-	
-	return render(request, 'addAddress.html', { 'formset' : formset.as_p() })
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj/Edytuj adres', 'form_url' : reverse('addAddress')})
 
 @login_required(login_url='login')
 def addRoomView(request, pk=None):
@@ -204,16 +201,13 @@ def addRoomView(request, pk=None):
 		room = get_object_or_404(Room, pk=pk)
 	else:
 		room = Room()
-	
 	formset = RoomForm(request.POST or None, instance=room)
-	
 	if request.method == 'POST':
 		if formset.is_valid():
 			room = formset.save(commit=False)
 			room.save()
 			return HttpResponseRedirect(reverse('room'))
-	
-	return render(request, 'addRoom.html', { 'formset' : formset.as_p() })
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj/Edytuj pomiesczenie', 'form_url' : reverse('addRoom')})
 	
 @login_required(login_url='login')
 def addEntryView(request, pk=None):
@@ -232,7 +226,6 @@ def addEntryView(request, pk=None):
 					raise PermissionDenied
 		entry = Entry()
 		editing = False
-	
 	if permissions.is_admin and not editing:
 		user_settings = UserSettings.objects.get(user=request.user)
 		if user_settings:
@@ -248,7 +241,6 @@ def addEntryView(request, pk=None):
 			formset = EntryFormSimple(request.POST or None, instance=entry)
 	else:
 		raise PermissionDenied
-	
 	if request.method == 'POST':
 		if formset.is_valid():
 			entry = formset.save(commit=False)
@@ -258,8 +250,7 @@ def addEntryView(request, pk=None):
 					log.save()
 			entry.save()
 			return HttpResponseRedirect(reverse('main'))
-	
-	return render(request, 'addEntry.html', { 'formset' : formset.as_p() })
+	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Dodaj/Edytuj wpis', 'form_url' : reverse('addEntry')})
 
 @login_required(login_url='login')
 def generateQrImage(request, pk=None):
