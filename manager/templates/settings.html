@@ -8,6 +8,10 @@
 			<th>Domyslna instytucja</th>
 			<th>Domyslna grupa</th>
 			<th>Domyslne pomieszczenie</th>
+			<th>Kolumny arkusza QR</th>
+			<th>Szerokosc etykiety(mm)</th>
+			<th>Wysokosc etykiety(mm)</th>
+			<th>Offset pionowy</th>
 		</tr>
 		<tr>
 			<td>
@@ -30,6 +34,18 @@
 				{% else %}
 					---
 				{% endif %}
+			</td>
+			<td>
+				{{ user_settings.qr_columns }}
+			</td>
+			<td>
+				{{ user_settings.qr_width }}
+			</td>
+			<td>
+				{{ user_settings.qr_height }}
+			</td>
+			<td>
+				{{ user_settings.qr_img_offset }}
 			</td>
 		</tr>
 	</table>
