@@ -614,6 +614,7 @@ def settingsEditView(request):
 
 @login_required(login_url='login')
 def generateRoomQrSheet(request, rpk=None, apk=None):
+	user_settings = get_object_or_404(UserSettings, user=request.user)
 	if rpk:
 		room = get_object_or_404(Room, pk=rpk)
 		entries = Entry.objects.filter(room=room)
@@ -622,7 +623,7 @@ def generateRoomQrSheet(request, rpk=None, apk=None):
 		entries = Entry.objects.filter(room__address=address)
 	else:
 		entries = Entry.objects.all()
-	columns = 3
+	columns = user_settings.qr_columns
 	grid = []
 	row_count = 0
 	for idx, entry in enumerate(entries):
@@ -631,7 +632,7 @@ def generateRoomQrSheet(request, rpk=None, apk=None):
 			if idx != 0:
 				row_count = row_count + 1
 		grid[row_count].append(entry)
-	cell = { 'width' : 7 , 'height' : 3.7 , 'img_height' : 3.7 - 1.5 }
+	cell = { 'width' : user_settings.qr_width , 'height' : user_settings.qr_height , 'img_height' : user_settings.qr_height - user_settings.qr_img_offset }
 	return render(request, 'qrSheetPdf.html', { 'grid' : grid , 'cell' : cell })
 	
 

@@ -193,6 +193,10 @@ class UserSettings(models.Model):
 	default_institution = models.ForeignKey(Institution, null=True, on_delete=models.SET_NULL, blank=True)
 	default_room = models.ForeignKey(Room, null=True, on_delete=models.SET_NULL, blank=True)
 	default_group = models.ForeignKey(EntryGroup, null=True, on_delete=models.SET_NULL, blank=True)
+	qr_columns = models.PositiveIntegerField()
+	qr_width = models.DecimalField(max_digits=5, decimal_places=2)
+	qr_height = models.DecimalField(max_digits=5, decimal_places=2)
+	qr_img_offset = models.DecimalField(max_digits=5, decimal_places=2)
 	
 	def getDefaultsDict(self):
 		return { 'institution' : self.default_institution , 'group' : self.default_group , 'room' : self.default_room }
