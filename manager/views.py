@@ -21,7 +21,7 @@ from manager.util import deURLify_entry_signing
 
 import StringIO
 import qrcode
-from datetime import datetime
+import datetime
 
 # Create your views here.
 
@@ -232,7 +232,7 @@ def addEntryView(request, pk=None):
 			init = user_settings.getDefaultsDict()
 			init['date_added'] = datetime.date.today()
 		else:
-			init = { 'date_added' :  datetime.now()}
+			init = { 'date_added' : datetime.date.today()}
 		formset = EntryForm(request.POST or None, instance=entry, initial=init)
 	elif editing:
 		if permissions.is_admin:
