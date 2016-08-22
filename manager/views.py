@@ -592,10 +592,11 @@ def liquidationEntryRemove(request, lpk=None, epk=None):
 
 @login_required(login_url='login')
 def settingsView(request):
-	user_settings = UserSettings.objects.get(user=request.user)
-	if not user_settings:
+	if not UserSettings.objects.filter(user=request.user).exists():
 		user_settings = UserSettings(user=request.user, default_institution=None, default_group=None, default_room=None)
 		user_settings.save()
+	else:
+		user_settings = UserSettings.objects.get(user=request.user)
 	return render(request, 'settings.html', { 'user_settings' : user_settings })
 
 @login_required(login_url='login')
