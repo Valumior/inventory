@@ -230,7 +230,7 @@ def addEntryView(request, pk=None):
 		user_settings = UserSettings.objects.get(user=request.user)
 		if user_settings:
 			init = user_settings.getDefaultsDict()
-			init['date_added'] = datetime.now()
+			init['date_added'] = datetime.date.today()
 		else:
 			init = { 'date_added' :  datetime.now()}
 		formset = EntryForm(request.POST or None, instance=entry, initial=init)
@@ -326,7 +326,6 @@ def changeUserActiveStatus(request, pk=None):
 		if not target_permissions.is_user_manager:
 			user.is_active = not user.is_active
 			user.save()
-			#TODO send email?	
 	return HttpResponseRedirect(reverse('userDetails',kwargs={ 'pk' : pk }))
 	
 @login_required(login_url='login')
@@ -545,7 +544,7 @@ def completeLiquidation(request, pk=None):
 	for entry in entries:
 		entry.removed_value = 0.0
 		entry.removed_description = liquidation.getMsg()
-		entry.date_removed = datetime.now()
+		entry.date_removed = datetime.date.today()
 		entry.save()
 	liquidation.save()
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
