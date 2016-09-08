@@ -412,13 +412,15 @@ def inventoryReportDetailsView(request, pk=None):
 @login_required(login_url='login')
 def generateInventoryOrderReport(request, pk=None):
 	order = get_object_or_404(InventoryOrder, pk=pk)
+	if not order.completed:
+		return Http404
 	reports = InventoryRoomReport.objects.filter(order=order)
 	entries = InventoryEntryNote.objects.filter(report__in=reports)
 	present_entries = entries.filter(status='P')
 	misplaced_entries = entries.filter(status='E').exclude(entry__in=present_entries.values('entry'))
 	duplicate_entries = entries.filter(status='E').filter(entry__in=present_entries.values('entry'))
 	missing_entries = entries.filter(status='M').exclude(entry__in=misplaced_entries.values('entry'))
-	return render_to_pdf_response(request, 'inventoryOrderReportPdf.html', { 'present_entries' : present_entries , 'misplaced_entries' : misplaced_entries , 'duplicate_entries' : duplicate_entries , 'missing_entries' : missing_entries })
+	return render_to_pdf_response(request, 'inventoryOrderReportPdf.html', { 'present_entries' : present_entries , 'misplaced_entries' : misplaced_entries , 'duplicate_entries' : duplicate_entries , 'missing_entries' : missing_entries , 'order' : order})
 
 @login_required(login_url='login')
 def finishInventoryOrder(request, pk=None):
