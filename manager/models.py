@@ -57,7 +57,7 @@ class Entry(models.Model):
 	date_removed = models.DateField(null=True, blank=True, verbose_name='Data likwidacji')
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
 	removed_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Wartosc likwidacji')
-	room = models.ForeignKey(Room, null=True, blank=True verbose_name='Pomieszczenie')
+	room = models.ForeignKey(Room, null=True, blank=True, verbose_name='Pomieszczenie')
 	short_description = models.TextField(max_length=150, null=True, blank=True, verbose_name='Krotki opis')
 	description = models.TextField(max_length=500, null=True, blank=True, verbose_name='Opis')
 	last_modified = models.DateTimeField(auto_now=True, verbose_name='Ostatnia modyfikacja')
