@@ -3,7 +3,6 @@
 
 {% block content %}
 	<h1>Zlecenie: {{ order }}</h1>
-	<h3>Data rozpoczecia: {{ order.date_added }}</h3>
 	{% if not finish %}
 		{% if order.completed %}
 			<h3>Data zakonczenia: {{ order.date_completed }}</h3>
