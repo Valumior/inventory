@@ -53,7 +53,7 @@ class Entry(models.Model):
 	name = models.CharField(max_length=100, blank=False, verbose_name='Nazwa')
 	date_added = models.DateField(verbose_name='Data dodania')
 	added_value = models.DecimalField(max_digits=10, decimal_places=2, blank=False, verbose_name='Wartosc poczatkowa')
-	added_description = models.TextField(max_length=250, blank=True)
+	added_description = models.TextField(max_length=250, blank=True, verbose_name='Opis dodania')
 	date_removed = models.DateField(null=True, blank=True, verbose_name='Data likwidacji')
 	removed_description = models.TextField(max_length=250, null=True, blank=True)
 	removed_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Wartosc likwidacji')
@@ -115,9 +115,9 @@ class LogEntry(models.Model):
 	user = models.ForeignKey(User, blank=False, related_name='change_author', verbose_name='Autor')
 
 class InventoryOrder(models.Model):
-	date_ordered = models.DateTimeField(auto_now_add=True)
-	completed = models.BooleanField(default=False)
-	date_completed = models.DateTimeField(null=True, blank=True)
+	date_ordered = models.DateTimeField(auto_now_add=True, verbose_name='Data rozpoczecia')
+	completed = models.BooleanField(default=False, verbose_name='Zakonczone')
+	date_completed = models.DateTimeField(null=True, blank=True, verbose_name='Data zakonczenia')
 	
 	def __unicode__(self):
 		return u'Zlecenie %s' % (self.date_ordered.strftime('%x'))
