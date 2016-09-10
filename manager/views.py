@@ -547,6 +547,7 @@ def completeLiquidation(request, pk=None):
 		entry.removed_value = 0.0
 		entry.removed_description = liquidation.getMsg()
 		entry.date_removed = datetime.date.today()
+		entry.room = None
 		entry.save()
 	liquidation.save()
 	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : pk }))
@@ -611,7 +612,7 @@ def settingsEditView(request):
 	if request.method == 'POST':
 		if formset.is_valid():
 			formset.save()
-			HttpResponseRedirect(reverse('settings'))
+			return HttpResponseRedirect(reverse('settings'))
 	return render(request, 'form.html', { 'formset' : formset , 'form_title' : 'Edytuj Ustawienia', 'form_url' : reverse('settingsEdit')})
 
 @login_required(login_url='login')

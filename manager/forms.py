@@ -68,6 +68,12 @@ class EntryForm(BootstrapModelFormBase):
 			if Entry.objects.filter(institution=data['institution'], group=data['group'], inventory_number=data['inventory_number']).exists():
 				raise ValidationError('podany numer juz istnieje')
 		return data['inventory_number']
+		
+	def clean_room(self):
+		data = self.cleaned_data
+		if data['room'] is None:
+			raise ValidationError('Wymagane pole')
+		return data['room']
 
 class EntryEditForm(BootstrapModelFormBase):
 	class Meta:
