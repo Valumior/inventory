@@ -173,7 +173,7 @@ class Liquidation(models.Model):
 	
 	def __unicode__(self):
 		if self.document_title == '':
-			return u'Wniosek %s' % (self.date_issued)
+			return u'Wniosek %s' % (self.date_issued.strftime('%d/%m/%Y'))
 		else:
 			return u'Wniosek %s' % (self.document_title)
 
