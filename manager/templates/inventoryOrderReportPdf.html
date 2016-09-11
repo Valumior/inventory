@@ -11,7 +11,7 @@
 
 {% block content %}
 	<div>
-		<h1>Raport z Inwentaryzacji {{ order.date_completed|date:"%d/%m/%Y" }}</h1>
+		<h1>Raport z Inwentaryzacji {{ order.date_completed|date:"d/m/Y" }}</h1>
 		<h2>Srodki trwale zgodne ze stanem</h2>
 		<table>
 			<tr>
