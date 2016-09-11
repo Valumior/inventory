@@ -22,7 +22,7 @@
 		<tr>
 			<td>{{ entry.signing }}</td>
 			<td>{{ entry.name }}</td>
-			<td>{{ entry.added_date }}</td>
+			<td>{{ entry.added_date|date:"d/m/Y" }}</td>
 			<td>{{ entry.added_value }}</td>
 		</tr>
 	{% endfor %}
