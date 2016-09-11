@@ -580,7 +580,7 @@ def liquidateEntry(request, epk=None, lpk=None):
 	if liquidation.submitted:
 		raise PermissionDenied
 	liquidation.entries.add(entry)
-	return HttpResponseRedirect(reverse('liquidationDetiails', kwargs={ 'pk' : liquidation.id }))
+	return HttpResponseRedirect(reverse('liquidationDetails', kwargs={ 'pk' : liquidation.id }))
 
 @login_required(login_url='login')
 def liquidationEntryRemove(request, lpk=None, epk=None):
