@@ -3,7 +3,7 @@
 
 {% block content %}
 {% if inactiveUsers %}
-	<h2>Nieaktywni uytkownicy</h2>
+	<h2>Nieaktywni uzytkownicy</h2>
 	<div class="list-group">
 	{% for selectedUser in inactiveUsers %}
 		<a class="list-group-item" href="{% url 'userDetails' pk=selectedUser.id %}">{{ selectedUser.username }}</a>
