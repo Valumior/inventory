@@ -433,7 +433,7 @@ def finishInventoryOrder(request, pk=None):
 	if Room.objects.exclude(id__in=done_rooms).exists():
 		raise PermissionDenied
 	order.completed = True
-	order.date_completed = datetime.now()
+	order.date_completed = datetime.date.today()
 	order.save()
 	return HttpResponseRedirect(reverse('inventoryOrderReports', kwargs={ 'pk' : pk }))
 
