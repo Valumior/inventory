@@ -16,19 +16,21 @@
 	{% endif %}
 	<h3>Opis:</h3>
 	<p>{{ entry.description }}</p>
-	{% if permissions.is_edit_allowed and not entry.date_removed %}
-		<a class="btn btn-default" href="{% url 'editEntry' pk=entry.getURL %}">Edytuj</a>
-	{% endif %}
-	{% if liquidation %}
-		<h4>Wniosek o likwidacje</h4>
-		<a href="{% url 'liquidationDetails' pk=liquidation.id %}">{{ liquidation }}</a>
-	{% else %}
-		{% if permissions.is_liquidation and possible_liquidations %}
-			{% for liq in possible_liquidations %}
-				<div class="list-group">
-					<a class="list-group-item" href="{% url 'liquidateEntry' epk=entry.getURL lpk=liq.id %}">Dodaj do wniosku o likwidacje {{ liq }}</a>
-				</div>
-			{% endfor %}
+	{% if not entry.date_removed %}
+		{% if permissions.is_edit_allowed %}
+			<a class="btn btn-default" href="{% url 'editEntry' pk=entry.getURL %}">Edytuj</a>
+		{% endif %}
+		{% if liquidation  %}
+			<h4>Wniosek o likwidacje</h4>
+			<a href="{% url 'liquidationDetails' pk=liquidation.id %}">{{ liquidation }}</a>
+		{% else %}
+			{% if permissions.is_liquidation and possible_liquidations %}
+				{% for liq in possible_liquidations %}
+					<div class="list-group">
+						<a class="list-group-item" href="{% url 'liquidateEntry' epk=entry.getURL lpk=liq.id %}">Dodaj do wniosku o likwidacje {{ liq }}</a>
+					</div>
+				{% endfor %}
+			{% endif %}
 		{% endif %}
 	{% endif %}
 	<h3>Kod QR:</h3>
